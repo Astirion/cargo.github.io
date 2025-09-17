@@ -1,0 +1,112 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f7f9fc;
+  color: #333;
+  line-height: 1.6;
+  padding: 20px;
+}
+
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #4A90E2;
+}
+
+header h1 {
+  font-size: 28px;
+}
+
+header p {
+  color: #666;
+  font-size: 16px;
+}
+
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  margin-bottom: 24px;
+}
+
+.card h2 {
+  margin-bottom: 16px;
+  color: #50C878;
+  font-size: 20px;
+}
+
+input, textarea {
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+textarea {
+  height: 80px;
+  resize: vertical;
+}
+
+button {
+  background: #50C878;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  font-size: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 10px;
+  width: 100%;
+  font-weight: 600;
+}
+
+button:hover {
+  background: #46b86c;
+}
+
+.matches {
+  background: white;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.matches h2 {
+  color: #4A90E2;
+  margin-bottom: 12px;
+}
+
+#matchList {
+  list-style: none;
+}
+
+#matchList li {
+  background: #f0f7ff;
+  padding: 12px;
+  margin: 8px 0;
+  border-radius: 8px;
+  font-size: 15px;
+  border-left: 4px solid #4A90E2;
+}
+
+footer {
+  text-align: center;
+  margin-top: 40px;
+  color: #888;
+  font-size: 14px;
+}
+
+

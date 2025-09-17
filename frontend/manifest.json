@@ -1,0 +1,24 @@
+{
+  "name": "Попутчик.Посылка",
+  "short_name": "Попутчик",
+  "description": "Доставка посылок через путешественников",
+  "start_url": "/frontend/index.html",
+  "display": "standalone",
+  "background_color": "#f7f9fc",
+  "theme_color": "#50C878",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "../icons/icon_192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "../icons/icon_512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
+
+

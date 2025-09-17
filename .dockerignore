@@ -1,0 +1,15 @@
+**/bin/
+**/obj/
+**/.vs/
+**/.vscode/
+**/node_modules/
+**/out/
+**/dist/
+.git
+.gitignore
+Dockerfile
+**/*.user
+**/*.suo
+**/*.log
+
+
