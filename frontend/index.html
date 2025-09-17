@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CargoGo - Сервис доставки</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#50C878">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚛 CargoGo</h1>
+            <p>Сервис для поиска попутчиков и грузоперевозок</p>
+        </header>
+
+        <div class="card">
+            <h2>✈️ Добавить маршрут путешественника</h2>
+            <form id="travelerForm">
+                <input type="text" name="from" placeholder="Откуда (например: Москва)" required>
+                <input type="text" name="to" placeholder="Куда (например: Санкт-Петербург)" required>
+                <input type="number" name="weight" placeholder="Максимальный вес груза (кг)" step="0.1" min="0.1" required>
+                <input type="number" name="reward" placeholder="Вознаграждение (₽)" min="0" required>
+                <button type="submit">Добавить маршрут</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <h2>📦 Добавить запрос на доставку</h2>
+            <form id="senderForm">
+                <input type="text" name="from" placeholder="Откуда (например: Москва)" required>
+                <input type="text" name="to" placeholder="Куда (например: Санкт-Петербург)" required>
+                <input type="number" name="weight" placeholder="Вес груза (кг)" step="0.1" min="0.1" required>
+                <textarea name="description" placeholder="Описание груза (необязательно)"></textarea>
+                <button type="submit">Добавить запрос</button>
+            </form>
+        </div>
+
+        <div class="matches">
+            <h2>🎯 Найденные совпадения</h2>
+            <ul id="matchList"></ul>
+            <p id="noMatches" style="display: none; color: #666; text-align: center; padding: 20px;">
+                Пока нет совпадений. Добавьте маршруты и запросы на доставку!
+            </p>
+        </div>
+
+        <footer>
+            <p>CargoGo © 2024 - Связываем путешественников и отправителей</p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        // Service Worker registration
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('service-worker.js')
+                .then(registration => console.log('SW registered'))
+                .catch(error => console.log('SW registration failed'));
+        }
+    </script>
+</body>
+</html>
