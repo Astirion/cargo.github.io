@@ -10,7 +10,7 @@ const noMatches = document.getElementById('noMatches');
 
 async function loadData() {
   try {
-    const apiBase = 'http://localhost:5115';
+    const apiBase = 'http://localhost:5000';
     const [travelersRes, sendersRes] = await Promise.all([
       fetch(`${apiBase}/api/travelers`).then(r => r.json()),
       fetch(`${apiBase}/api/senders`).then(r => r.json())
@@ -40,7 +40,7 @@ travelerForm.addEventListener('submit', async (e) => {
   const newTraveler = { from, to, weight, reward };
 
   try {
-    const apiBase = 'http://localhost:5115';
+    const apiBase = 'http://localhost:5000';
     const response = await fetch(`${apiBase}/api/travelers`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -78,7 +78,7 @@ senderForm.addEventListener('submit', async (e) => {
   const newSender = { from, to, weight, description: desc };
 
   try {
-    const apiBase = 'http://localhost:5115';
+    const apiBase = 'http://localhost:5000';
     const response = await fetch(`${apiBase}/api/senders`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

@@ -4,13 +4,14 @@ services:
   backend:
     build:
       context: .
-      dockerfile: backend/Dockerfile
+      dockerfile: CargoGo.Api/Dockerfile
     container_name: cargogo-backend
     environment:
-      - ASPNETCORE_URLS=http://0.0.0.0:5115
+      - ASPNETCORE_URLS=http://0.0.0.0:5000
       - ASPNETCORE_ENVIRONMENT=Development
+      - DOTNET_CLI_TELEMETRY_OPTOUT=1
     ports:
-      - "5115:5115"
+      - "5000:5000"
     restart: unless-stopped
 
   frontend:
