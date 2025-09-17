@@ -1,0 +1,74 @@
+# OS
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Editors/IDE
+.vscode/
+.idea/
+*.code-workspace
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# Node/Frontend
+node_modules/
+dist/
+build/
+*.log
+frontend/.cache/
+frontend/*.log
+frontend/.DS_Store
+frontend/.env
+frontend/.env.*.local
+
+# .NET
+[Bb]in/
+[Oo]bj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.tlog
+*.svclog
+*.pidb
+*.scc
+
+# NuGet
+*.nupkg
+*.snupkg
+*.nuspec
+packages/
+project.lock.json
+project.assets.json
+*.nuget.props
+*.nuget.targets
+
+# Build outputs / publishing
+**/publish/
+artifacts/
+
+# Test / coverage
+TestResults/
+coverage/
+*.coverage
+*.coveragexml
+
+# Docker / environment
+docker-compose.override.yml
+.env
+.env.*
+
+# Logs
+logs/
+**/*.log
+
+# Temp files
+tmp/
+temp/
+*.tmp
+*.swp
+*.swo
+
+
