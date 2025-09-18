@@ -15,6 +15,34 @@
             <p>Сервис для поиска попутчиков и грузоперевозок</p>
         </header>
 
+        <div class="dropdown-section">
+            <div class="dropdown">
+                <button class="dropdown-btn" id="routesBtn">
+                    🗺️ Маршруты поездок
+                    <span class="dropdown-arrow">▼</span>
+                </button>
+                <div class="dropdown-content" id="routesDropdown">
+                    <div class="dropdown-header">Список маршрутов путешественников:</div>
+                    <ul id="routesList">
+                        <li class="empty-message">Пока нет добавленных маршрутов</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="dropdown">
+                <button class="dropdown-btn" id="ordersBtn">
+                    📦 Заказы на доставку
+                    <span class="dropdown-arrow">▼</span>
+                </button>
+                <div class="dropdown-content" id="ordersDropdown">
+                    <div class="dropdown-header">Список заказов на доставку:</div>
+                    <ul id="ordersList">
+                        <li class="empty-message">Пока нет добавленных заказов</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
         <div class="card">
             <h2>✈️ Добавить маршрут путешественника</h2>
             <form id="travelerForm">

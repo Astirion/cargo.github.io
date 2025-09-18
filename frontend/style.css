@@ -109,4 +109,123 @@ footer {
   font-size: 14px;
 }
 
+/* Dropdown styles */
+.dropdown-section {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.dropdown {
+  position: relative;
+  flex: 1;
+  min-width: 250px;
+}
+
+.dropdown-btn {
+  background: #4A90E2;
+  color: white;
+  border: none;
+  padding: 12px 16px;
+  font-size: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 100%;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background-color 0.3s ease;
+}
+
+.dropdown-btn:hover {
+  background: #357ABD;
+}
+
+.dropdown-btn.active {
+  background: #357ABD;
+}
+
+.dropdown-arrow {
+  transition: transform 0.3s ease;
+  font-size: 12px;
+}
+
+.dropdown-btn.active .dropdown-arrow {
+  transform: rotate(180deg);
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background: white;
+  min-width: 100%;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  z-index: 1000;
+  border: 1px solid #ddd;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.dropdown-content.show {
+  display: block;
+}
+
+.dropdown-header {
+  padding: 12px 16px;
+  background: #f8f9fa;
+  border-bottom: 1px solid #ddd;
+  font-weight: 600;
+  color: #4A90E2;
+  border-radius: 8px 8px 0 0;
+}
+
+.dropdown-content ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.dropdown-content li {
+  padding: 12px 16px;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.dropdown-content li:last-child {
+  border-bottom: none;
+  border-radius: 0 0 8px 8px;
+}
+
+.dropdown-content li.empty-message {
+  color: #666;
+  font-style: italic;
+  text-align: center;
+}
+
+.dropdown-content li.route-item {
+  background: #f0f7ff;
+  border-left: 4px solid #4A90E2;
+}
+
+.dropdown-content li.order-item {
+  background: #f0fff0;
+  border-left: 4px solid #50C878;
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+  .dropdown-section {
+    flex-direction: column;
+  }
+  
+  .dropdown {
+    min-width: 100%;
+  }
+}
+
+
 

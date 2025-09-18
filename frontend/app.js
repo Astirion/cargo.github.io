@@ -8,6 +8,14 @@ const senderForm = document.getElementById('senderForm');
 const matchList = document.getElementById('matchList');
 const noMatches = document.getElementById('noMatches');
 
+// Dropdown elements
+const routesBtn = document.getElementById('routesBtn');
+const ordersBtn = document.getElementById('ordersBtn');
+const routesDropdown = document.getElementById('routesDropdown');
+const ordersDropdown = document.getElementById('ordersDropdown');
+const routesList = document.getElementById('routesList');
+const ordersList = document.getElementById('ordersList');
+
 async function loadData() {
   try {
     const apiBase = 'http://localhost:5000';
@@ -18,6 +26,8 @@ async function loadData() {
     travelers = travelersRes;
     senders = sendersRes;
     findMatches();
+    updateRoutesList();
+    updateOrdersList();
   } catch (err) {
     console.error('Ошибка загрузки данных с сервера:', err);
     noMatches.textContent = 'Не удалось подключиться к серверу. Проверь, запущен ли C# API на http://localhost:5115';
@@ -52,6 +62,7 @@ travelerForm.addEventListener('submit', async (e) => {
       travelers.push(saved);
       travelerForm.reset();
       findMatches();
+      updateRoutesList();
       alert(`✅ Маршрут добавлен: ${from} → ${to}`);
     } else {
       alert('❌ Ошибка при сохранении маршрута.');
@@ -90,6 +101,7 @@ senderForm.addEventListener('submit', async (e) => {
       senders.push(saved);
       senderForm.reset();
       findMatches();
+      updateOrdersList();
       alert(`✅ Запрос на доставку добавлен: ${from} → ${to}`);
     } else {
       alert('❌ Ошибка при сохранении запроса.');
@@ -124,6 +136,86 @@ function findMatches() {
   });
 
   noMatches.style.display = hasMatches ? 'none' : 'block';
+}
+
+// Dropdown functionality
+function toggleDropdown(button, dropdown) {
+  const isActive = button.classList.contains('active');
+  
+  // Close all dropdowns
+  document.querySelectorAll('.dropdown-btn').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  document.querySelectorAll('.dropdown-content').forEach(content => {
+    content.classList.remove('show');
+  });
+  
+  // Toggle current dropdown
+  if (!isActive) {
+    button.classList.add('active');
+    dropdown.classList.add('show');
+  }
+}
+
+// Event listeners for dropdown buttons
+routesBtn.addEventListener('click', () => {
+  toggleDropdown(routesBtn, routesDropdown);
+});
+
+ordersBtn.addEventListener('click', () => {
+  toggleDropdown(ordersBtn, ordersDropdown);
+});
+
+// Close dropdowns when clicking outside
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.dropdown')) {
+    document.querySelectorAll('.dropdown-btn').forEach(btn => {
+      btn.classList.remove('active');
+    });
+    document.querySelectorAll('.dropdown-content').forEach(content => {
+      content.classList.remove('show');
+    });
+  }
+});
+
+// Update routes list
+function updateRoutesList() {
+  routesList.innerHTML = '';
+  
+  if (travelers.length === 0) {
+    routesList.innerHTML = '<li class="empty-message">Пока нет добавленных маршрутов</li>';
+    return;
+  }
+  
+  travelers.forEach((traveler, index) => {
+    const li = document.createElement('li');
+    li.className = 'route-item';
+    li.innerHTML = `
+      <strong>${traveler.from} → ${traveler.to}</strong><br>
+      <small>Макс. вес: ${traveler.weight} кг | Вознаграждение: ${traveler.reward} ₽</small>
+    `;
+    routesList.appendChild(li);
+  });
+}
+
+// Update orders list
+function updateOrdersList() {
+  ordersList.innerHTML = '';
+  
+  if (senders.length === 0) {
+    ordersList.innerHTML = '<li class="empty-message">Пока нет добавленных заказов</li>';
+    return;
+  }
+  
+  senders.forEach((sender, index) => {
+    const li = document.createElement('li');
+    li.className = 'order-item';
+    li.innerHTML = `
+      <strong>${sender.from} → ${sender.to}</strong><br>
+      <small>Вес: ${sender.weight} кг | ${sender.description}</small>
+    `;
+    ordersList.appendChild(li);
+  });
 }
 
 document.addEventListener('DOMContentLoaded', loadData);

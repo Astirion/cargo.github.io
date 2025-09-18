@@ -1454,7 +1454,7 @@
       ]
     },
     "System.Memory/4.5.3": {
-      "sha512": "cPzhWlLMdqrLrgXI6J4uOY0dMpA/Y/ZAp91KPldH8seoh9S/0i8qLkAnSQbPkWSN/RaXNPt8dOubT3JhQITh2w==",
+      "sha512": "3oDzvc/zzetpTKWMShs1AADwZjQ/36HnsufHRPcOjyRAAMLDlu2iD33MBI2opxnezcVUtXyqDXXjoFMOU9c7SA==",
       "type": "package",
       "path": "system.memory/4.5.3",
       "files": [
@@ -1560,19 +1560,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\clien\\.nuget\\packages\\": {}
+    "C:\\Users\\Windows\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "F:\\Cargo\\CargoGo.Api\\CargoGo.Api.csproj",
+      "projectUniqueName": "C:\\CargoGo\\CargoGo.Api\\CargoGo.Api.csproj",
       "projectName": "CargoGo.Api",
-      "projectPath": "F:\\Cargo\\CargoGo.Api\\CargoGo.Api.csproj",
-      "packagesPath": "C:\\Users\\clien\\.nuget\\packages\\",
-      "outputPath": "F:\\Cargo\\CargoGo.Api\\obj\\",
+      "projectPath": "C:\\CargoGo\\CargoGo.Api\\CargoGo.Api.csproj",
+      "packagesPath": "C:\\Users\\Windows\\.nuget\\packages\\",
+      "outputPath": "C:\\CargoGo\\CargoGo.Api\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\clien\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\Windows\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
@@ -1584,8 +1584,8 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "projectReferences": {
-            "F:\\Cargo\\CargoGo.Dal\\CargoGo.Dal.csproj": {
-              "projectPath": "F:\\Cargo\\CargoGo.Dal\\CargoGo.Dal.csproj"
+            "C:\\CargoGo\\CargoGo.Dal\\CargoGo.Dal.csproj": {
+              "projectPath": "C:\\CargoGo\\CargoGo.Dal\\CargoGo.Dal.csproj"
             }
           }
         }
@@ -1638,7 +1638,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

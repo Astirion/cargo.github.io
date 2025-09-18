@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "F:\\Cargo\\CargoGo.Api\\CargoGo.Api.csproj": {}
+    "C:\\CargoGo\\CargoGo.Api\\CargoGo.Api.csproj": {}
   },
   "projects": {
-    "F:\\Cargo\\CargoGo.Api\\CargoGo.Api.csproj": {
+    "C:\\CargoGo\\CargoGo.Api\\CargoGo.Api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "F:\\Cargo\\CargoGo.Api\\CargoGo.Api.csproj",
+        "projectUniqueName": "C:\\CargoGo\\CargoGo.Api\\CargoGo.Api.csproj",
         "projectName": "CargoGo.Api",
-        "projectPath": "F:\\Cargo\\CargoGo.Api\\CargoGo.Api.csproj",
-        "packagesPath": "C:\\Users\\clien\\.nuget\\packages\\",
-        "outputPath": "F:\\Cargo\\CargoGo.Api\\obj\\",
+        "projectPath": "C:\\CargoGo\\CargoGo.Api\\CargoGo.Api.csproj",
+        "packagesPath": "C:\\Users\\Windows\\.nuget\\packages\\",
+        "outputPath": "C:\\CargoGo\\CargoGo.Api\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\clien\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\Windows\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
@@ -26,8 +26,8 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "F:\\Cargo\\CargoGo.Dal\\CargoGo.Dal.csproj": {
-                "projectPath": "F:\\Cargo\\CargoGo.Dal\\CargoGo.Dal.csproj"
+              "C:\\CargoGo\\CargoGo.Dal\\CargoGo.Dal.csproj": {
+                "projectPath": "C:\\CargoGo\\CargoGo.Dal\\CargoGo.Dal.csproj"
               }
             }
           }
@@ -80,21 +80,21 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "F:\\Cargo\\CargoGo.Dal\\CargoGo.Dal.csproj": {
+    "C:\\CargoGo\\CargoGo.Dal\\CargoGo.Dal.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "F:\\Cargo\\CargoGo.Dal\\CargoGo.Dal.csproj",
+        "projectUniqueName": "C:\\CargoGo\\CargoGo.Dal\\CargoGo.Dal.csproj",
         "projectName": "CargoGo.Dal",
-        "projectPath": "F:\\Cargo\\CargoGo.Dal\\CargoGo.Dal.csproj",
-        "packagesPath": "C:\\Users\\clien\\.nuget\\packages\\",
-        "outputPath": "F:\\Cargo\\CargoGo.Dal\\obj\\",
+        "projectPath": "C:\\CargoGo\\CargoGo.Dal\\CargoGo.Dal.csproj",
+        "packagesPath": "C:\\Users\\Windows\\.nuget\\packages\\",
+        "outputPath": "C:\\CargoGo\\CargoGo.Dal\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\clien\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\Windows\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
@@ -149,7 +149,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
