@@ -38,22 +38,6 @@
           "build/Swashbuckle.AspNetCore.props": {}
         }
       },
-      "Swashbuckle.AspNetCore.Annotations/6.5.0": {
-        "type": "package",
-        "dependencies": {
-          "Swashbuckle.AspNetCore.SwaggerGen": "6.5.0"
-        },
-        "compile": {
-          "lib/net7.0/Swashbuckle.AspNetCore.Annotations.dll": {
-            "related": ".pdb;.xml"
-          }
-        },
-        "runtime": {
-          "lib/net7.0/Swashbuckle.AspNetCore.Annotations.dll": {
-            "related": ".pdb;.xml"
-          }
-        }
-      },
       "Swashbuckle.AspNetCore.Swagger/6.5.0": {
         "type": "package",
         "dependencies": {
@@ -368,32 +352,6 @@
         "swashbuckle.aspnetcore.nuspec"
       ]
     },
-    "Swashbuckle.AspNetCore.Annotations/6.5.0": {
-      "sha512": "EcHd1z2pEdnpaBMTI9qjVxk6mFVGVMZ1n0ySC3fjrkXCQQ8O9fMdt9TxPJRKyjiTiTjvO9700jKjmyl+hPBinQ==",
-      "type": "package",
-      "path": "swashbuckle.aspnetcore.annotations/6.5.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "lib/net5.0/Swashbuckle.AspNetCore.Annotations.dll",
-        "lib/net5.0/Swashbuckle.AspNetCore.Annotations.pdb",
-        "lib/net5.0/Swashbuckle.AspNetCore.Annotations.xml",
-        "lib/net6.0/Swashbuckle.AspNetCore.Annotations.dll",
-        "lib/net6.0/Swashbuckle.AspNetCore.Annotations.pdb",
-        "lib/net6.0/Swashbuckle.AspNetCore.Annotations.xml",
-        "lib/net7.0/Swashbuckle.AspNetCore.Annotations.dll",
-        "lib/net7.0/Swashbuckle.AspNetCore.Annotations.pdb",
-        "lib/net7.0/Swashbuckle.AspNetCore.Annotations.xml",
-        "lib/netcoreapp3.0/Swashbuckle.AspNetCore.Annotations.dll",
-        "lib/netcoreapp3.0/Swashbuckle.AspNetCore.Annotations.pdb",
-        "lib/netcoreapp3.0/Swashbuckle.AspNetCore.Annotations.xml",
-        "lib/netstandard2.0/Swashbuckle.AspNetCore.Annotations.dll",
-        "lib/netstandard2.0/Swashbuckle.AspNetCore.Annotations.pdb",
-        "lib/netstandard2.0/Swashbuckle.AspNetCore.Annotations.xml",
-        "swashbuckle.aspnetcore.annotations.6.5.0.nupkg.sha512",
-        "swashbuckle.aspnetcore.annotations.nuspec"
-      ]
-    },
     "Swashbuckle.AspNetCore.Swagger/6.5.0": {
       "sha512": "XWmCmqyFmoItXKFsQSwQbEAsjDKcxlNf1l+/Ki42hcb6LjKL8m5Db69OTvz5vLonMSRntYO1XLqz0OP+n3vKnA==",
       "type": "package",
@@ -475,8 +433,7 @@
   },
   "projectFileDependencyGroups": {
     "net9.0": [
-      "Swashbuckle.AspNetCore >= 6.5.0",
-      "Swashbuckle.AspNetCore.Annotations >= 6.5.0"
+      "Swashbuckle.AspNetCore >= 6.5.0"
     ]
   },
   "packageFolders": {
@@ -485,11 +442,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "F:\\Cargo\\backend\\CargoGo.Api.csproj",
+      "projectUniqueName": "F:\\Cargo\\CargoGo.Api\\CargoGo.Api.csproj",
       "projectName": "CargoGo.Api",
-      "projectPath": "F:\\Cargo\\backend\\CargoGo.Api.csproj",
+      "projectPath": "F:\\Cargo\\CargoGo.Api\\CargoGo.Api.csproj",
       "packagesPath": "C:\\Users\\clien\\.nuget\\packages\\",
-      "outputPath": "F:\\Cargo\\backend\\obj\\",
+      "outputPath": "F:\\Cargo\\CargoGo.Api\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\clien\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -523,10 +480,6 @@
         "targetAlias": "net9.0",
         "dependencies": {
           "Swashbuckle.AspNetCore": {
-            "target": "Package",
-            "version": "[6.5.0, )"
-          },
-          "Swashbuckle.AspNetCore.Annotations": {
             "target": "Package",
             "version": "[6.5.0, )"
           }

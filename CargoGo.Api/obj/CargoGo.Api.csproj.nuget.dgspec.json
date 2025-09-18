@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "F:\\Cargo\\backend\\CargoGo.Api.csproj": {}
+    "F:\\Cargo\\CargoGo.Api\\CargoGo.Api.csproj": {}
   },
   "projects": {
-    "F:\\Cargo\\backend\\CargoGo.Api.csproj": {
+    "F:\\Cargo\\CargoGo.Api\\CargoGo.Api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "F:\\Cargo\\backend\\CargoGo.Api.csproj",
+        "projectUniqueName": "F:\\Cargo\\CargoGo.Api\\CargoGo.Api.csproj",
         "projectName": "CargoGo.Api",
-        "projectPath": "F:\\Cargo\\backend\\CargoGo.Api.csproj",
+        "projectPath": "F:\\Cargo\\CargoGo.Api\\CargoGo.Api.csproj",
         "packagesPath": "C:\\Users\\clien\\.nuget\\packages\\",
-        "outputPath": "F:\\Cargo\\backend\\obj\\",
+        "outputPath": "F:\\Cargo\\CargoGo.Api\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\clien\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -45,10 +45,6 @@
           "targetAlias": "net9.0",
           "dependencies": {
             "Swashbuckle.AspNetCore": {
-              "target": "Package",
-              "version": "[6.5.0, )"
-            },
-            "Swashbuckle.AspNetCore.Annotations": {
               "target": "Package",
               "version": "[6.5.0, )"
             }
