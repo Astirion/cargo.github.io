@@ -1,4 +1,7 @@
 using CargoGo.Api.Models;
+using CargoGo.Dal;
+using CargoGo.Dal.Entities;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,7 +39,20 @@ builder.Services.AddCors(options =>
               .AllowAnyHeader());
 });
 
+// DAL: Register DbContext with SQLite
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+                      ?? "Data Source=cargogo.db";
+builder.Services.AddDbContext<CargoGoContext>(options =>
+    options.UseSqlite(connectionString));
+
 var app = builder.Build();
+
+// Ensure database is created (temporary dev setup)
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<CargoGoContext>();
+    db.Database.EnsureCreated();
+}
 
 // Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
@@ -60,29 +76,43 @@ if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 
 app.UseCors();
 
-var travelers = new List<Traveler>
+// In-memory data removed. Using SQLite via CargoGoContext.
+
+app.MapGet("/api/travelers", (CargoGoContext db) =>
 {
-    new Traveler { Id = 1, From = "Москва", To = "Санкт-Петербург", Weight = 15.5, Reward = 2500, CreatedAt = DateTime.UtcNow.AddHours(-2) },
-    new Traveler { Id = 2, From = "Казань", To = "Екатеринбург", Weight = 8.0, Reward = 1800, CreatedAt = DateTime.UtcNow.AddHours(-1) },
-    new Traveler { Id = 3, From = "Новосибирск", To = "Красноярск", Weight = 25.0, Reward = 3200, CreatedAt = DateTime.UtcNow.AddMinutes(-30) },
-    new Traveler { Id = 4, From = "Ростов-на-Дону", To = "Сочи", Weight = 12.3, Reward = 2100, CreatedAt = DateTime.UtcNow.AddMinutes(-15) },
-    new Traveler { Id = 5, From = "Владивосток", To = "Хабаровск", Weight = 30.0, Reward = 4500, CreatedAt = DateTime.UtcNow.AddMinutes(-5) }
-};
-
-var senders = new List<Sender>();
-var travelerId = 6;
-var senderId = 1;
-
-app.MapGet("/api/travelers", () => Results.Ok(travelers))
+    var items = db.Travelers
+        .OrderByDescending(t => t.CreatedAt)
+        .Select(t => new Traveler
+        {
+            Id = t.Id,
+            From = t.From,
+            To = t.To,
+            Weight = t.Weight,
+            Reward = t.Reward,
+            CreatedAt = t.CreatedAt
+        })
+        .ToList();
+    return Results.Ok(items);
+})
     .WithName("GetTravelers")
     .WithTags("Travelers")
     .Produces<List<Traveler>>(StatusCodes.Status200OK);
 
-app.MapPost("/api/travelers", (Traveler traveler) =>
+app.MapPost("/api/travelers", (CargoGoContext db, Traveler traveler) =>
 {
-    traveler.Id = travelerId++;
-    traveler.CreatedAt = DateTime.UtcNow;
-    travelers.Add(traveler);
+    var entity = new TravelerEntity
+    {
+        From = traveler.From,
+        To = traveler.To,
+        Weight = traveler.Weight,
+        Reward = traveler.Reward,
+        CreatedAt = DateTime.UtcNow
+    };
+    db.Travelers.Add(entity);
+    db.SaveChanges();
+
+    traveler.Id = entity.Id;
+    traveler.CreatedAt = entity.CreatedAt;
     return Results.Ok(traveler);
 })
     .WithName("CreateTraveler")
@@ -91,16 +121,41 @@ app.MapPost("/api/travelers", (Traveler traveler) =>
     .Produces<Traveler>(StatusCodes.Status200OK)
     .ProducesValidationProblem();
 
-app.MapGet("/api/senders", () => Results.Ok(senders))
+app.MapGet("/api/senders", (CargoGoContext db) =>
+{
+    var items = db.Senders
+        .OrderByDescending(s => s.CreatedAt)
+        .Select(s => new Sender
+        {
+            Id = s.Id,
+            From = s.From,
+            To = s.To,
+            Weight = s.Weight,
+            Description = s.Description,
+            CreatedAt = s.CreatedAt
+        })
+        .ToList();
+    return Results.Ok(items);
+})
     .WithName("GetSenders")
     .WithTags("Senders")
     .Produces<List<Sender>>(StatusCodes.Status200OK);
 
-app.MapPost("/api/senders", (Sender sender) =>
+app.MapPost("/api/senders", (CargoGoContext db, Sender sender) =>
 {
-    sender.Id = senderId++;
-    sender.CreatedAt = DateTime.UtcNow;
-    senders.Add(sender);
+    var entity = new SenderEntity
+    {
+        From = sender.From,
+        To = sender.To,
+        Weight = sender.Weight,
+        Description = sender.Description,
+        CreatedAt = DateTime.UtcNow
+    };
+    db.Senders.Add(entity);
+    db.SaveChanges();
+
+    sender.Id = entity.Id;
+    sender.CreatedAt = entity.CreatedAt;
     return Results.Ok(sender);
 })
     .WithName("CreateSender")
