@@ -4,7 +4,29 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+    {
+        Title = "CargoGo API",
+        Version = "v1",
+        Description = "API для платформы CargoGo - сервиса поиска попутного груза и путешественников",
+        Contact = new Microsoft.OpenApi.Models.OpenApiContact
+        {
+            Name = "CargoGo Support",
+            Email = "support@cargogo.com"
+        }
+    });
+
+    // Включаем XML комментарии
+    var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    c.IncludeXmlComments(xmlPath);
+
+    // Настройка тегов для группировки endpoints
+    c.TagActionsBy(api => new[] { api.GroupName ?? "Default" });
+    c.DocInclusionPredicate((name, api) => true);
+});
 
 builder.Services.AddCors(options =>
 {
@@ -17,12 +39,23 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline
-app.UseSwaggerUI(c =>
+if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 {
-    c.RoutePrefix = string.Empty; // Set Swagger UI at the app's root
-    c.DocumentTitle = "CargoGo API";
-    c.DefaultModelsExpandDepth(-1); // Hide models section
-});
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "CargoGo API v1");
+        c.RoutePrefix = string.Empty; // Set Swagger UI at the app's root
+        c.DocumentTitle = "CargoGo API Documentation";
+        c.DefaultModelsExpandDepth(2); // Show models section
+        c.DefaultModelRendering(Swashbuckle.AspNetCore.SwaggerUI.ModelRendering.Model);
+        c.DisplayRequestDuration();
+        c.EnableDeepLinking();
+        c.EnableFilter();
+        c.ShowExtensions();
+        c.EnableValidator();
+    });
+}
 
 
 app.UseCors();
@@ -40,18 +73,11 @@ var senders = new List<Sender>();
 var travelerId = 6;
 var senderId = 1;
 
-/// <summary>
-/// Получить список всех путешественников
-/// </summary>
-/// <returns>Список путешественников</returns>
 app.MapGet("/api/travelers", () => Results.Ok(travelers))
-    .WithName("GetTravelers");
+    .WithName("GetTravelers")
+    .WithTags("Travelers")
+    .Produces<List<Traveler>>(StatusCodes.Status200OK);
 
-/// <summary>
-/// Добавить нового путешественника
-/// </summary>
-/// <param name="traveler">Данные путешественника</param>
-/// <returns>Созданный путешественник</returns>
 app.MapPost("/api/travelers", (Traveler traveler) =>
 {
     traveler.Id = travelerId++;
@@ -59,20 +85,17 @@ app.MapPost("/api/travelers", (Traveler traveler) =>
     travelers.Add(traveler);
     return Results.Ok(traveler);
 })
-    .WithName("CreateTraveler");
+    .WithName("CreateTraveler")
+    .WithTags("Travelers")
+    .Accepts<Traveler>("application/json")
+    .Produces<Traveler>(StatusCodes.Status200OK)
+    .ProducesValidationProblem();
 
-/// <summary>
-/// Получить список всех отправителей
-/// </summary>
-/// <returns>Список отправителей</returns>
 app.MapGet("/api/senders", () => Results.Ok(senders))
-    .WithName("GetSenders");
+    .WithName("GetSenders")
+    .WithTags("Senders")
+    .Produces<List<Sender>>(StatusCodes.Status200OK);
 
-/// <summary>
-/// Добавить нового отправителя
-/// </summary>
-/// <param name="sender">Данные отправителя</param>
-/// <returns>Созданный отправитель</returns>
 app.MapPost("/api/senders", (Sender sender) =>
 {
     sender.Id = senderId++;
@@ -80,7 +103,11 @@ app.MapPost("/api/senders", (Sender sender) =>
     senders.Add(sender);
     return Results.Ok(sender);
 })
-    .WithName("CreateSender");
+    .WithName("CreateSender")
+    .WithTags("Senders")
+    .Accepts<Sender>("application/json")
+    .Produces<Sender>(StatusCodes.Status200OK)
+    .ProducesValidationProblem();
 
 app.Run();
 
