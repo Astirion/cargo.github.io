@@ -17,11 +17,11 @@ node_modules/
 dist/
 build/
 *.log
-CargoGo.Front/.cache/
-CargoGo.Front/*.log
-CargoGo.Front/.DS_Store
-CargoGo.Front/.env
-CargoGo.Front/.env.*.local
+frontend/.cache/
+frontend/*.log
+frontend/.DS_Store
+frontend/.env
+frontend/.env.*.local
 
 # .NET
 [Bb]in/
