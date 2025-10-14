@@ -71,4 +71,8 @@ temp/
 *.swp
 *.swo
 
+# SQLite WAL/shm files
+cargogo.db-wal
+cargogo.db-shm
+
 
