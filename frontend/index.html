@@ -22,7 +22,10 @@
                     <span class="dropdown-arrow">▼</span>
                 </button>
                 <div class="dropdown-content" id="routesDropdown">
-                    <div class="dropdown-header">Список маршрутов путешественников:</div>
+                    <div class="dropdown-filters">
+                        <input id="routesFilterFrom" type="text" placeholder="Откуда" autocomplete="off">
+                        <input id="routesFilterTo" type="text" placeholder="Куда" autocomplete="off">
+                    </div>
                     <ul id="routesList">
                         <li class="empty-message">Пока нет добавленных маршрутов</li>
                     </ul>
@@ -35,7 +38,10 @@
                     <span class="dropdown-arrow">▼</span>
                 </button>
                 <div class="dropdown-content" id="ordersDropdown">
-                    <div class="dropdown-header">Список заказов на доставку:</div>
+                    <div class="dropdown-filters">
+                        <input id="ordersFilterFrom" type="text" placeholder="Откуда" autocomplete="off">
+                        <input id="ordersFilterTo" type="text" placeholder="Куда" autocomplete="off">
+                    </div>
                     <ul id="ordersList">
                         <li class="empty-message">Пока нет добавленных заказов</li>
                     </ul>

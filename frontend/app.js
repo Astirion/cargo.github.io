@@ -16,6 +16,10 @@ const ordersDropdown = document.getElementById('ordersDropdown');
 const routesList = document.getElementById('routesList');
 const ordersList = document.getElementById('ordersList');
 
+// Фильтры для поиска
+let routesFilter = { from: '', to: '' };
+let ordersFilter = { from: '', to: '' };
+
 async function loadData() {
   try {
     const apiBase = 'http://localhost:5000';
@@ -119,7 +123,7 @@ function findMatches() {
   senders.forEach(sender => {
     travelers.forEach(traveler => {
       const fromMatch = sender.from.toLowerCase() === traveler.from.toLowerCase();
-      const toMatch = sender.to.toLowerCase() === traveler.to.toLowerCase();
+      const toMatch = sender.to.toLowerCase() === traveler.toLowerCase();
       const weightOk = sender.weight <= traveler.weight;
 
       if (fromMatch && toMatch && weightOk) {
@@ -160,10 +164,14 @@ function toggleDropdown(button, dropdown) {
 // Event listeners for dropdown buttons
 routesBtn.addEventListener('click', () => {
   toggleDropdown(routesBtn, routesDropdown);
+  // При открытии сразу обновлять список маршрутов
+  updateRoutesList();
 });
 
 ordersBtn.addEventListener('click', () => {
   toggleDropdown(ordersBtn, ordersDropdown);
+  // При открытии сразу обновлять список заказов
+  updateOrdersList();
 });
 
 // Close dropdowns when clicking outside
@@ -178,16 +186,37 @@ document.addEventListener('click', (e) => {
   }
 });
 
-// Update routes list
+// --- Функции для фильтрации и сортировки ---
+
+function filterAndSort(items, filter) {
+  // Убираем пробелы до и после введённых символов
+  const from = (filter.from || '').trim().toLowerCase();
+  const to = (filter.to || '').trim().toLowerCase();
+  return items
+    .filter(item =>
+      (!from || item.from.toLowerCase().includes(from)) &&
+      (!to || item.to.toLowerCase().includes(to))
+    )
+    .sort((a, b) => {
+      const aStr = `${a.from.toLowerCase()} ${a.to.toLowerCase()}`;
+      const bStr = `${b.from.toLowerCase()} ${b.to.toLowerCase()}`;
+      return aStr.localeCompare(bStr);
+    });
+}
+
+// --- Обновление списков с учетом фильтра ---
+
 function updateRoutesList() {
   routesList.innerHTML = '';
-  
-  if (travelers.length === 0) {
+
+  const filtered = filterAndSort(travelers, routesFilter);
+
+  if (filtered.length === 0) {
     routesList.innerHTML = '<li class="empty-message">Пока нет добавленных маршрутов</li>';
     return;
   }
-  
-  travelers.forEach((traveler, index) => {
+
+  filtered.forEach(traveler => {
     const li = document.createElement('li');
     li.className = 'route-item';
     li.innerHTML = `
@@ -198,16 +227,17 @@ function updateRoutesList() {
   });
 }
 
-// Update orders list
 function updateOrdersList() {
   ordersList.innerHTML = '';
-  
-  if (senders.length === 0) {
+
+  const filtered = filterAndSort(senders, ordersFilter);
+
+  if (filtered.length === 0) {
     ordersList.innerHTML = '<li class="empty-message">Пока нет добавленных заказов</li>';
     return;
   }
-  
-  senders.forEach((sender, index) => {
+
+  filtered.forEach(sender => {
     const li = document.createElement('li');
     li.className = 'order-item';
     li.innerHTML = `
@@ -218,6 +248,57 @@ function updateOrdersList() {
   });
 }
 
-document.addEventListener('DOMContentLoaded', loadData);
+// --- Обработчики для фильтров поиска ---
+
+function setupDropdownFilters() {
+  // Для маршрутов
+  const routesFromInput = document.getElementById('routesFilterFrom');
+  const routesToInput = document.getElementById('routesFilterTo');
+  routesFromInput.addEventListener('input', e => {
+    routesFilter.from = e.target.value;
+    updateRoutesList();
+  });
+  routesFromInput.addEventListener('keyup', e => {
+    routesFilter.from = e.target.value;
+    updateRoutesList();
+  });
+  routesToInput.addEventListener('input', e => {
+    routesFilter.to = e.target.value;
+    updateRoutesList();
+  });
+  routesToInput.addEventListener('keyup', e => {
+    routesFilter.to = e.target.value;
+    updateRoutesList();
+  });
+
+  // Для заказов
+  const ordersFromInput = document.getElementById('ordersFilterFrom');
+  const ordersToInput = document.getElementById('ordersFilterTo');
+  ordersFromInput.addEventListener('input', e => {
+    ordersFilter.from = e.target.value;
+    updateOrdersList();
+  });
+  ordersFromInput.addEventListener('keyup', e => {
+    ordersFilter.from = e.target.value;
+    updateOrdersList();
+  });
+  ordersToInput.addEventListener('input', e => {
+    ordersFilter.to = e.target.value;
+    updateOrdersList();
+  });
+  ordersToInput.addEventListener('keyup', e => {
+    ordersFilter.to = e.target.value;
+    updateOrdersList();
+  });
+
+  // Показываем весь список при первой инициализации фильтров
+  updateRoutesList();
+  updateOrdersList();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  loadData();
+  setupDropdownFilters();
+});
 
 
