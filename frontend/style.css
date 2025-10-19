@@ -224,6 +224,90 @@ footer {
   background: #fff;
 }
 
+/* Auth styles */
+.auth-topbar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.auth-dropdown {
+  position: relative;
+}
+
+.auth-btn {
+  background: #4A90E2;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  padding: 6px 8px;
+  font-size: 13px;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s;
+  position: relative;
+}
+
+.auth-btn .auth-arrow {
+  font-size: 10px;
+  margin-left: 2px;
+  color: #fff;
+}
+
+.auth-btn:hover {
+  background: #357ABD;
+}
+
+#authBtnText {
+  margin-left: 0;
+  font-size: 13px;
+}
+
+#authUserIcon {
+  margin-right: 0;
+  vertical-align: middle;
+}
+
+.auth-dropdown-content {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 110%;
+  background: #fff;
+  min-width: 120px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+  border-radius: 8px;
+  z-index: 1001;
+  padding: 6px 0;
+}
+
+.auth-dropdown-content.show {
+  display: block;
+}
+
+.auth-dd-item {
+  width: 100%;
+  background: none;
+  border: none;
+  text-align: left;
+  padding: 8px 16px;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.auth-dd-item:hover {
+  background: #f0f7ff;
+}
+
 /* Responsive design */
 @media (max-width: 600px) {
   .dropdown-section {

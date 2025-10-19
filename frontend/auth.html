@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Авторизация | CargoGo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container" style="max-width:350px;margin-top:60px;">
+        <h2 style="text-align:center;margin-bottom:24px;">Вход в CargoGo</h2>
+        <form id="loginForm" class="card" style="padding:24px;">
+            <label for="login" style="font-weight:600;">Логин</label>
+            <input type="text" id="login" name="login" placeholder="Введите логин" required autocomplete="username">
+            <label for="password" style="font-weight:600;">Пароль</label>
+            <input type="password" id="password" name="password" placeholder="Введите пароль" required autocomplete="current-password">
+            <button type="submit" style="margin-top:18px;">Войти</button>
+        </form>
+        <div id="loginError" style="color:#c00;text-align:center;margin-top:12px;display:none;"></div>
+        <div style="text-align:center;margin-top:18px;">
+            Нет аккаунта? <a href="register.html">Зарегистрироваться</a>
+        </div>
+    </div>
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const login = document.getElementById('login').value.trim();
+            const password = document.getElementById('password').value;
+            // TODO: заменить на реальный запрос к API авторизации
+            if (!login || !password) {
+                showError('Пожалуйста, заполните все поля.');
+                return;
+            }
+            // Пример заглушки
+            if (login === 'demo' && password === 'demo') {
+                window.location.href = 'index.html';
+            } else {
+                showError('Неверный логин или пароль');
+            }
+        });
+        function showError(msg) {
+            const err = document.getElementById('loginError');
+            err.textContent = msg;
+            err.style.display = '';
+        }
+    </script>
+</body>
+</html>
