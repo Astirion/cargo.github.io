@@ -71,8 +71,54 @@ temp/
 *.swp
 *.swo
 
-# SQLite WAL/shm files
-cargogo.db-wal
-cargogo.db-shm
+# SQLite databases and WAL/shm files
+*.db
+*.db-wal
+*.db-shm
 
+# Visual Studio files
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+*_i.c
+*_p.c
+*_h.h
+*.ilk
+*.meta
+*.obj
+*.iobj
+*.pch
+*.pdb
+*.ipdb
+*.pgc
+*.pgd
+*.rsp
+*.sbr
+*.tlb
+*.tli
+*.tlh
+*.tmp
+*.tmp_proj
+*_wpftmp.csproj
+*.vspscc
+*.vssscc
+.builds
 
+# Visual Studio profiler
+*.psess
+*.vsp
+*.vspx
+*.sap
+
+# Debug/Release folders
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
