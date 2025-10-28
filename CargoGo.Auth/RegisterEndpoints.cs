@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
+
 
 namespace CargoGo.Auth;
 
@@ -9,7 +8,7 @@ public static class RegisterEndpoints
 {
     public static void MapRegisterEndpoint(this WebApplication app)
     {
-        app.MapPost("/api/register", async (
+        app.MapPost("/api/register2", async (
             UserManager<IdentityUser> userManager,
             RegisterRequest req) =>
         {
