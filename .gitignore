@@ -44,6 +44,17 @@ project.lock.json
 project.assets.json
 *.nuget.props
 *.nuget.targets
+*.nuget.cache
+*.csproj.nuget.dgspec.json
+*.csproj.nuget.g.props
+*.csproj.nuget.g.targets
+.nuget/
+*.nupkg.metadata
+global.json
+msbuild.binlog
+**/obj/project.assets.json
+**/obj/project.nuget.cache
+**/obj/*.csproj.nuget.*
 
 # Build outputs / publishing
 **/publish/
