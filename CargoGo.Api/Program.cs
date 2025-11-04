@@ -3,7 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using CargoGo.Api.Models;
+using CargoGo.Auth;
 using CargoGo.Dal;
 using CargoGo.Dal.Entities;
 using Microsoft.AspNetCore.Builder;
@@ -12,10 +14,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
 // Add services to the container
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -30,7 +35,31 @@ builder.Services.AddSwaggerGen(c =>
             Email = "support@cargogo.com"
         }
     });
-
+    
+    // Добавляем схему авторизации JWT Bearer
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
+    });
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            []
+        }
+    });
+    
     // Включаем XML комментарии
     var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
@@ -41,6 +70,7 @@ builder.Services.AddSwaggerGen(c =>
     c.DocInclusionPredicate((name, api) => true);
 });
 
+/*
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
@@ -48,24 +78,28 @@ builder.Services.AddCors(options =>
               .AllowAnyMethod()
               .AllowAnyHeader());
 });
+*/
 
 // DAL: Register DbContext with SQLite
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
-                      ?? "Data Source=cargogo.db";
+var appConnectionString = builder.Configuration.GetConnectionString("CargoGoConnection");
 builder.Services.AddDbContext<CargoGoContext>(options =>
-    options.UseSqlite(connectionString));
+    options.UseSqlite(appConnectionString));
+
+builder.Services.AddCargoGoIdentity(builder.Configuration);
 
 var app = builder.Build();
 
+/*
 // Ensure database is created (temporary dev setup)
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<CargoGoContext>();
     db.Database.EnsureCreated();
 }
+*/
 
 // Configure the HTTP request pipeline
-if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
+//if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI(c =>
@@ -83,30 +117,40 @@ if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
     });
 }
 
+app.UseHttpsRedirection();
 
-app.UseCors();
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapControllers();
+
+//app.UseCors();
 
 // In-memory data removed. Using SQLite via CargoGoContext.
-
-app.MapGet("/api/travelers", (CargoGoContext db) =>
-{
-    var items = db.Travelers
-        .OrderByDescending(t => t.CreatedAt)
-        .Select(t => new Traveler
-        {
-            Id = t.Id,
-            From = t.From,
-            To = t.To,
-            Weight = t.Weight,
-            Reward = t.Reward,
-            CreatedAt = t.CreatedAt
-        })
-        .ToList();
-    return Results.Ok(items);
-})
+app.MapGet("/api/travelers", (CargoGoContext db, ClaimsPrincipal user) =>
+    {
+        var userName = user.Identity.Name; // Имя пользователя
+        var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value; // ID пользователя
+        var userEmail = user.FindFirst(ClaimTypes.Email)?.Value; // Email пользователя
+        
+        var items = db.Travelers
+            .OrderByDescending(t => t.CreatedAt)
+            .Select(t => new Traveler
+            {
+                Id = t.Id,
+                From = t.From,
+                To = t.To,
+                Weight = t.Weight,
+                Reward = t.Reward,
+                CreatedAt = t.CreatedAt
+            })
+            .ToList();
+        return Results.Ok(items);
+    })
     .WithName("GetTravelers")
     .WithTags("Travelers")
-    .Produces<List<Traveler>>(StatusCodes.Status200OK);
+    .Produces<List<Traveler>>(StatusCodes.Status200OK)
+    .RequireAuthorization();
 
 app.MapPost("/api/travelers", (CargoGoContext db, Traveler traveler) =>
 {

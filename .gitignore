@@ -45,7 +45,7 @@ project.assets.json
 *.nuget.props
 *.nuget.targets
 *.nuget.cache
-*.csproj.nuget.dgspec.json
+*/CargoGo.Api.csproj.nuget.g.props
 *.csproj.nuget.g.props
 *.csproj.nuget.g.targets
 .nuget/
