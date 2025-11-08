@@ -84,14 +84,6 @@
             </form>
         </div>
 
-        <div class="matches">
-            <h2>🎯 Найденные совпадения</h2>
-            <ul id="matchList"></ul>
-            <p id="noMatches" style="display: none; color: #666; text-align: center; padding: 20px;">
-                Пока нет совпадений. Добавьте маршруты и запросы на доставку!
-            </p>
-        </div>
-
         <footer>
             <p>CargoGo © 2024 - Связываем путешественников и отправителей</p>
         </footer>
@@ -143,50 +135,7 @@
                 window.location.href = 'auth.html';
             }
         };
-
-        // Функция отправки запроса с токеном (для защищённых эндпоинтов)
-        async function apiRequest(url, options = {}) {
-            const headers = {
-                'Content-Type': 'application/json',
-                ...options.headers
-            };
-            if (token) {
-                headers['Authorization'] = `Bearer ${token}`;
-            }
-
-            const response = await fetch(url, {
-                ...options,
-                headers
-            });
-
-            if (response.status === 401) {
-                // Если токен просрочен или невалиден — выходим
-                localStorage.removeItem('jwtToken');
-                token = null;
-                updateAuthButton();
-                window.location.href = 'register.html';
-                throw new Error('Неавторизован');
-            }
-
-            return response;
-        }
-
-        // Пример: загрузка маршрутов (НЕ требует токен)
-        async function loadTravelers() {
-            try {
-                // Не отправляем Authorization заголовок
-                const resp = await fetch('http://localhost:5000/api/travelers');
-                if (!resp.ok) throw new Error('Ошибка загрузки маршрутов');
-                const travelers = await resp.json();
-                console.log('Travelers:', travelers);
-                // Обновите UI (например, заполните #routesList)
-            } catch (e) {
-                console.error(e);
-            }
-        }
-
-        // Загрузка данных при открытии страницы (без проверки токена)
-        loadTravelers();
+         
     </script>
 </body>
 </html>
