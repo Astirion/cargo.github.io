@@ -11,15 +11,15 @@
 <body>
     <div class="container">
         <div class="auth-topbar">
-            <button class="auth-btn" id="authBtn">
+             <button class="auth-btn" id="authBtn">
                 <span id="authBtnContent">
-                    <svg id="authUserIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" style="vertical-align:middle;">
+                    <svg id="authUserIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" style="vertical-align:middle; margin-right: 8px;">
                         <!-- Голова -->
                         <circle cx="12" cy="8" r="4" fill="#fff"/>
                         <!-- Плечи -->
                         <path d="M4 20c0-3.3137 3.134-6 8-6s8 2.6863 8 6" fill="#fff"/>
                     </svg>
-                    <!-- <span id="authBtnText">Войти</span> -->
+                    <span id="authBtnText">Войти</span> <!-- ✅ Текст внутри кнопки -->
                 </span>
             </button>
         </div>
@@ -99,10 +99,94 @@
 
     <script src="app.js"></script>
     <script>
-        // auth button logic: просто переход на страницу авторизации
+        let token = localStorage.getItem('jwtToken');
+
+        // Функция получения имени пользователя из токена
+        function getUserNameFromToken(token) {
+            if (!token) return null;
+            try {
+                const payload = token.split('.')[1];
+                const decodedPayload = atob(payload);
+                const claims = JSON.parse(decodedPayload);
+                // Попробуем получить имя из полей: name, email, sub
+                return claims.name || claims.unique_name || claims.email || claims.sub || 'Пользователь';
+            } catch (e) {
+                console.error('Ошибка декодирования токена:', e);
+                return null;
+            }
+        }
+
+        // Функция обновления UI
+        function updateAuthButton() {
+            const label = document.getElementById('authUserLabel');
+            const btnText = document.getElementById('authBtnText');
+            if (token) {
+                const userName = getUserNameFromToken(token);
+                btnText.textContent = userName;
+            } else {
+                btnText.textContent = 'Войти'; // ✅ Кнопка показывает "Войти"
+            }
+        }
+
+        // Проверяем токен при загрузке
+        updateAuthButton();
+
+        // Обработчик кнопки "Войти/Выйти"
         document.getElementById('authBtn').onclick = function() {
-            window.location.href = 'auth.html';
+            if (token) {
+                // Выход: удаляем токен
+                localStorage.removeItem('jwtToken');
+                token = null;
+                updateAuthButton();
+                window.location.href = 'index.html'; // Перезагрузка
+            } else {
+                window.location.href = 'auth.html';
+            }
         };
+
+        // Функция отправки запроса с токеном (для защищённых эндпоинтов)
+        async function apiRequest(url, options = {}) {
+            const headers = {
+                'Content-Type': 'application/json',
+                ...options.headers
+            };
+            if (token) {
+                headers['Authorization'] = `Bearer ${token}`;
+            }
+
+            const response = await fetch(url, {
+                ...options,
+                headers
+            });
+
+            if (response.status === 401) {
+                // Если токен просрочен или невалиден — выходим
+                localStorage.removeItem('jwtToken');
+                token = null;
+                updateAuthButton();
+                window.location.href = 'register.html';
+                throw new Error('Неавторизован');
+            }
+
+            return response;
+        }
+
+        // Пример: загрузка маршрутов (НЕ требует токен)
+        async function loadTravelers() {
+            try {
+                // Не отправляем Authorization заголовок
+                const resp = await fetch('http://localhost:5000/api/travelers');
+                if (!resp.ok) throw new Error('Ошибка загрузки маршрутов');
+                const travelers = await resp.json();
+                console.log('Travelers:', travelers);
+                // Обновите UI (например, заполните #routesList)
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        // Загрузка данных при открытии страницы (без проверки токена)
+        loadTravelers();
     </script>
 </body>
 </html>

@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -35,7 +34,7 @@ builder.Services.AddSwaggerGen(c =>
             Email = "support@cargogo.com"
         }
     });
-    
+
     // Добавляем схему авторизации JWT Bearer
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
@@ -59,7 +58,7 @@ builder.Services.AddSwaggerGen(c =>
             []
         }
     });
-    
+
     // Включаем XML комментарии
     var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
@@ -70,15 +69,13 @@ builder.Services.AddSwaggerGen(c =>
     c.DocInclusionPredicate((name, api) => true);
 });
 
-/*
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
         policy.AllowAnyOrigin()
-              .AllowAnyMethod()
-              .AllowAnyHeader());
+            .AllowAnyMethod()
+            .AllowAnyHeader());
 });
-*/
 
 // DAL: Register DbContext with SQLite
 var appConnectionString = builder.Configuration.GetConnectionString("CargoGoConnection");
@@ -119,105 +116,56 @@ using (var scope = app.Services.CreateScope())
 
 app.UseHttpsRedirection();
 
-app.UseAuthentication();
-app.UseAuthorization();
 
 app.MapControllers();
 
-//app.UseCors();
+app.UseCors();
 
-// In-memory data removed. Using SQLite via CargoGoContext.
-app.MapGet("/api/travelers", (CargoGoContext db, ClaimsPrincipal user) =>
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapGet("/api/senders", (CargoGoContext db) =>
     {
-        var userName = user.Identity.Name; // Имя пользователя
-        var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value; // ID пользователя
-        var userEmail = user.FindFirst(ClaimTypes.Email)?.Value; // Email пользователя
-        
-        var items = db.Travelers
-            .OrderByDescending(t => t.CreatedAt)
-            .Select(t => new Traveler
+        var items = db.Senders
+            .OrderByDescending(s => s.CreatedAt)
+            .Select(s => new Sender
             {
-                Id = t.Id,
-                From = t.From,
-                To = t.To,
-                Weight = t.Weight,
-                Reward = t.Reward,
-                CreatedAt = t.CreatedAt
+                Id = s.Id,
+                From = s.From,
+                To = s.To,
+                Weight = s.Weight,
+                Description = s.Description,
+                CreatedAt = s.CreatedAt
             })
             .ToList();
         return Results.Ok(items);
     })
-    .WithName("GetTravelers")
-    .WithTags("Travelers")
-    .Produces<List<Traveler>>(StatusCodes.Status200OK)
-    .RequireAuthorization();
-
-app.MapPost("/api/travelers", (CargoGoContext db, Traveler traveler) =>
-{
-    var entity = new TravelerEntity
-    {
-        From = traveler.From,
-        To = traveler.To,
-        Weight = traveler.Weight,
-        Reward = traveler.Reward,
-        CreatedAt = DateTime.UtcNow
-    };
-    db.Travelers.Add(entity);
-    db.SaveChanges();
-
-    traveler.Id = entity.Id;
-    traveler.CreatedAt = entity.CreatedAt;
-    return Results.Ok(traveler);
-})
-    .WithName("CreateTraveler")
-    .WithTags("Travelers")
-    .Accepts<Traveler>("application/json")
-    .Produces<Traveler>(StatusCodes.Status200OK)
-    .ProducesValidationProblem();
-
-app.MapGet("/api/senders", (CargoGoContext db) =>
-{
-    var items = db.Senders
-        .OrderByDescending(s => s.CreatedAt)
-        .Select(s => new Sender
-        {
-            Id = s.Id,
-            From = s.From,
-            To = s.To,
-            Weight = s.Weight,
-            Description = s.Description,
-            CreatedAt = s.CreatedAt
-        })
-        .ToList();
-    return Results.Ok(items);
-})
     .WithName("GetSenders")
     .WithTags("Senders")
     .Produces<List<Sender>>(StatusCodes.Status200OK);
 
 app.MapPost("/api/senders", (CargoGoContext db, Sender sender) =>
-{
-    var entity = new SenderEntity
     {
-        From = sender.From,
-        To = sender.To,
-        Weight = sender.Weight,
-        Description = sender.Description,
-        CreatedAt = DateTime.UtcNow
-    };
-    db.Senders.Add(entity);
-    db.SaveChanges();
+        var entity = new SenderEntity
+        {
+            From = sender.From,
+            To = sender.To,
+            Weight = sender.Weight,
+            Description = sender.Description,
+            CreatedAt = DateTime.UtcNow
+        };
+        db.Senders.Add(entity);
+        db.SaveChanges();
 
-    sender.Id = entity.Id;
-    sender.CreatedAt = entity.CreatedAt;
-    return Results.Ok(sender);
-})
+        sender.Id = entity.Id;
+        sender.CreatedAt = entity.CreatedAt;
+        return Results.Ok(sender);
+    })
     .WithName("CreateSender")
     .WithTags("Senders")
     .Accepts<Sender>("application/json")
     .Produces<Sender>(StatusCodes.Status200OK)
-    .ProducesValidationProblem();
+    .ProducesValidationProblem()
+    .RequireAuthorization();
 
 app.Run();
-
-

@@ -10,8 +10,8 @@
     <div class="container" style="max-width:350px;margin-top:60px;">
         <h2 style="text-align:center;margin-bottom:24px;">Вход в CargoGo</h2>
         <form id="loginForm" class="card" style="padding:24px;">
-            <label for="login" style="font-weight:600;">Логин</label>
-            <input type="text" id="login" name="login" placeholder="Введите логин" required autocomplete="username">
+            <label for="login" style="font-weight:600;">Email</label>
+            <input type="email" id="login" name="login" placeholder="Введите email" required autocomplete="username">
             <label for="password" style="font-weight:600;">Пароль</label>
             <input type="password" id="password" name="password" placeholder="Введите пароль" required autocomplete="current-password">
             <button type="submit" style="margin-top:18px;">Войти</button>
@@ -24,20 +24,42 @@
     <script>
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            const login = document.getElementById('login').value.trim();
+            const email = document.getElementById('login').value.trim();
             const password = document.getElementById('password').value;
-            // TODO: заменить на реальный запрос к API авторизации
-            if (!login || !password) {
+
+            if (!email || !password) {
                 showError('Пожалуйста, заполните все поля.');
                 return;
             }
-            // Пример заглушки
-            if (login === 'demo' && password === 'demo') {
-                window.location.href = 'index.html';
-            } else {
-                showError('Неверный логин или пароль');
+
+            try {
+                const response = await fetch('http://localhost:5000/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })  // ✅ Отправляем email и password
+                });
+
+                if (response.ok) {
+                    const token = await response.text(); // ✅ Получаем токен как строку
+
+                    if (!token) {
+                        showError('Сервер не вернул токен');
+                        return;
+                    }
+
+                    // ✅ Сохраняем токен в localStorage
+                    localStorage.setItem('jwtToken', token);
+
+                    window.location.href = 'index.html';
+                } else {
+                    const error = await response.text();
+                    showError(error || 'Ошибка входа');
+                }
+            } catch (error) {
+                showError('Ошибка соединения с сервером: ' + error.message);
             }
         });
+
         function showError(msg) {
             const err = document.getElementById('loginError');
             err.textContent = msg;

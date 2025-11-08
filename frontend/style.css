@@ -225,34 +225,34 @@ footer {
 }
 
 /* Auth styles */
-.auth-topbar {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  margin-bottom: 10px;
-}
 
 .auth-dropdown {
   position: relative;
 }
 
+.auth-topbar {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Отступ между надписью и кнопкой */
+    justify-content: flex-end;
+}
+
 .auth-btn {
-  background: #4A90E2;
-  color: #fff;
-  border: none;
-  border-radius: 50%;
-  padding: 6px 8px;
-  font-size: 13px;
-  width: 32px;
-  height: 32px;
-  min-width: 32px;
-  min-height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: background 0.2s;
-  position: relative;
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 16px;
+    border-radius: 20px; /* Эллипсоидный прямоугольник */
+    background-color: #4A90E2;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    text-decoration: none;
+    width: auto; 
+}
+
+.auth-btn:hover {
+    background-color: #357ABD;
 }
 
 .auth-btn .auth-arrow {
@@ -261,9 +261,6 @@ footer {
   color: #fff;
 }
 
-.auth-btn:hover {
-  background: #357ABD;
-}
 
 #authBtnText {
   margin-left: 0;

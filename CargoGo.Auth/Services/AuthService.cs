@@ -29,7 +29,7 @@ namespace CargoGo.Auth.Services
 
         public async Task<bool> RegisterAsync(string login, string email, string password)
         {
-            var user = new AppUser { UserName = login, Email = email };
+            var user = new AppUser { UserName = login, NormalizedEmail = login, Email = email };
             var result = await _userManager.CreateAsync(user, password);
             if (result.Succeeded)
             {

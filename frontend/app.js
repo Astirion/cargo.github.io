@@ -34,12 +34,21 @@ async function loadData() {
     updateOrdersList();
   } catch (err) {
     console.error('Ошибка загрузки данных с сервера:', err);
-    noMatches.textContent = 'Не удалось подключиться к серверу. Проверь, запущен ли C# API на http://localhost:5115';
+    noMatches.textContent = 'Не удалось подключиться к серверу. Проверь, запущен ли C# API на http://localhost:5000';
   }
 }
 
+// Обработчик формы добавления маршрута
 travelerForm.addEventListener('submit', async (e) => {
   e.preventDefault();
+
+  const token = localStorage.getItem('jwtToken');
+  if (!token) {
+    alert('Требуется авторизация для добавления маршрута');
+    window.location.href = 'auth.html';
+    return;
+  }
+
   const data = new FormData(travelerForm);
   const from = data.get('from').trim();
   const to = data.get('to').trim();
@@ -57,7 +66,10 @@ travelerForm.addEventListener('submit', async (e) => {
     const apiBase = 'http://localhost:5000';
     const response = await fetch(`${apiBase}/api/travelers`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`  // ✅ Токен добавлен
+      },
       body: JSON.stringify(newTraveler)
     });
 
@@ -77,8 +89,17 @@ travelerForm.addEventListener('submit', async (e) => {
   }
 });
 
+// Обработчик формы добавления запроса
 senderForm.addEventListener('submit', async (e) => {
   e.preventDefault();
+
+  const token = localStorage.getItem('jwtToken');
+  if (!token) {
+    alert('Требуется авторизация для добавления запроса');
+    window.location.href = 'register.html';
+    return;
+  }
+
   const data = new FormData(senderForm);
   const from = data.get('from').trim();
   const to = data.get('to').trim();
@@ -96,7 +117,10 @@ senderForm.addEventListener('submit', async (e) => {
     const apiBase = 'http://localhost:5000';
     const response = await fetch(`${apiBase}/api/senders`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`  // ✅ Токен добавлен
+      },
       body: JSON.stringify(newSender)
     });
 
@@ -111,11 +135,12 @@ senderForm.addEventListener('submit', async (e) => {
       alert('❌ Ошибка при сохранении запроса.');
     }
   } catch (err) {
-    alert('⚠️ Не удалось подключиться к серверу. Убедитесь, что C# API запущен.');
+    alert('⚠️ Ошибка подклюсения к сервису');
     console.error(err);
   }
 });
 
+// Поиск совпадений
 function findMatches() {
   matchList.innerHTML = '';
   let hasMatches = false;
@@ -123,7 +148,7 @@ function findMatches() {
   senders.forEach(sender => {
     travelers.forEach(traveler => {
       const fromMatch = sender.from.toLowerCase() === traveler.from.toLowerCase();
-      const toMatch = sender.to.toLowerCase() === traveler.toLowerCase();
+      const toMatch = sender.to.toLowerCase() === traveler.to.toLowerCase(); // ✅ Исправлено: было traveler.toLowerCase()
       const weightOk = sender.weight <= traveler.weight;
 
       if (fromMatch && toMatch && weightOk) {
@@ -300,5 +325,3 @@ document.addEventListener('DOMContentLoaded', () => {
   loadData();
   setupDropdownFilters();
 });
-
-

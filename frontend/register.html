@@ -29,24 +29,34 @@
             const login = document.getElementById('reg_login').value.trim();
             const password = document.getElementById('reg_password').value;
             const email = document.getElementById('reg_email').value.trim();
+
             if (!login || !password || !email) {
                 showError('Пожалуйста, заполните все поля.');
                 return;
             }
+
             try {
-                const response = await fetch('http://localhost:5000/api/register', {
+                const response = await fetch('http://localhost:5000/api/auth/register', {  
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ login, password, email })
+                    body: JSON.stringify({login, password, email }) 
                 });
+
                 if (response.ok) {
                     // После успешной регистрации сразу логиним пользователя
-                    const loginResp = await fetch('http://localhost:5000/api/login', {
+                    const loginResp = await fetch('http://localhost:5000/api/auth/login', {  // ✅ Правильный путь
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ login, password })
+                        body: JSON.stringify({ email, password })  // ✅ Используем email и password
                     });
+
                     if (loginResp.ok) {
+                        const data = await loginResp.json();
+                        const token = data.token; // ✅ Получаем токен
+
+                        // ✅ Сохраняем токен
+                        localStorage.setItem('jwtToken', token);
+
                         window.location.href = 'index.html';
                     } else {
                         showError('Пользователь создан, но вход не выполнен');
@@ -55,10 +65,11 @@
                     const err = await response.json();
                     showError(err.message || 'Ошибка регистрации');
                 }
-            } catch {
-                showError('Ошибка соединения с сервером');
+            } catch (error) {
+                showError('Ошибка соединения с сервером: ' + error.message);
             }
         });
+
         function showError(msg) {
             const err = document.getElementById('registerError');
             err.textContent = msg;
