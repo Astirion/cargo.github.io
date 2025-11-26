@@ -32,6 +32,17 @@ header p {
   font-size: 16px;
 }
 
+input[type="date"] {
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  background-color: white;
+  color: #333;
+}
+
 .card {
   background: white;
   padding: 20px;

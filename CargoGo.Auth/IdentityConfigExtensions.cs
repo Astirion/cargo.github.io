@@ -1,5 +1,5 @@
 using System.Text;
-using CargoGo.Auth.Models;
+using CargoGo.Auth.ModelsDb;
 using CargoGo.Auth.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;

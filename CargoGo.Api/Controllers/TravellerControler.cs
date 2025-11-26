@@ -1,4 +1,5 @@
-using CargoGo.Api.Models;
+using System.Security.Claims;
+using CargoGo.Api.Requests;
 using CargoGo.Dal;
 using CargoGo.Dal.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -34,13 +35,21 @@ namespace CargoGo.Api.Controllers
         [Authorize]
         public async Task<ActionResult<Traveler>> CreateTraveler(Traveler traveler)
         {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized();
+            }
+            
             var entity = new TravelerEntity
             {
+                TravelTime = traveler.TravelTime,
                 From = traveler.From,
                 To = traveler.To,
                 Weight = traveler.Weight,
                 Reward = traveler.Reward,
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow,
+                UserId = userId
             };
 
             db.Travelers.Add(entity);

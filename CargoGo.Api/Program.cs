@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Claims;
-using CargoGo.Api.Models;
+using CargoGo.Api.Requests;
 using CargoGo.Auth;
 using CargoGo.Dal;
 using CargoGo.Dal.Entities;
@@ -123,49 +123,5 @@ app.UseCors();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
-app.MapGet("/api/senders", (CargoGoContext db) =>
-    {
-        var items = db.Senders
-            .OrderByDescending(s => s.CreatedAt)
-            .Select(s => new Sender
-            {
-                Id = s.Id,
-                From = s.From,
-                To = s.To,
-                Weight = s.Weight,
-                Description = s.Description,
-                CreatedAt = s.CreatedAt
-            })
-            .ToList();
-        return Results.Ok(items);
-    })
-    .WithName("GetSenders")
-    .WithTags("Senders")
-    .Produces<List<Sender>>(StatusCodes.Status200OK);
-
-app.MapPost("/api/senders", (CargoGoContext db, Sender sender) =>
-    {
-        var entity = new SenderEntity
-        {
-            From = sender.From,
-            To = sender.To,
-            Weight = sender.Weight,
-            Description = sender.Description,
-            CreatedAt = DateTime.UtcNow
-        };
-        db.Senders.Add(entity);
-        db.SaveChanges();
-
-        sender.Id = entity.Id;
-        sender.CreatedAt = entity.CreatedAt;
-        return Results.Ok(sender);
-    })
-    .WithName("CreateSender")
-    .WithTags("Senders")
-    .Accepts<Sender>("application/json")
-    .Produces<Sender>(StatusCodes.Status200OK)
-    .ProducesValidationProblem()
-    .RequireAuthorization();
 
 app.Run();

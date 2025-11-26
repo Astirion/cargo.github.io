@@ -54,13 +54,14 @@ travelerForm.addEventListener('submit', async (e) => {
   const to = data.get('to').trim();
   const weight = parseFloat(data.get('weight'));
   const reward = parseInt(data.get('reward'));
+  const travelTime = data.get('travelTime'); 
 
-  if (!from || !to || isNaN(weight) || isNaN(reward) || weight <= 0 || reward < 0) {
+  if (!from || !to || isNaN(weight)  || !travelTime || isNaN(reward) || weight <= 0 || reward < 0) {
     alert('❌ Пожалуйста, заполните все поля корректно.');
     return;
   }
 
-  const newTraveler = { from, to, weight, reward };
+  const newTraveler = { from, to, weight, reward, travelTime };
 
   try {
     const apiBase = 'http://localhost:5000';
@@ -68,7 +69,7 @@ travelerForm.addEventListener('submit', async (e) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`  // ✅ Токен добавлен
+        'Authorization': `Bearer ${token}` 
       },
       body: JSON.stringify(newTraveler)
     });
@@ -135,7 +136,7 @@ senderForm.addEventListener('submit', async (e) => {
       alert('❌ Ошибка при сохранении запроса.');
     }
   } catch (err) {
-    alert('⚠️ Ошибка подклюсения к сервису');
+    alert('⚠️ Ошибка подключения к сервису');
     console.error(err);
   }
 });
@@ -246,7 +247,7 @@ function updateRoutesList() {
     li.className = 'route-item';
     li.innerHTML = `
       <strong>${traveler.from} → ${traveler.to}</strong><br>
-      <small>Макс. вес: ${traveler.weight} кг | Вознаграждение: ${traveler.reward} ₽</small>
+      <small>Время: ${new Date(traveler.travelTime).toLocaleString()} | Макс. вес: ${traveler.weight} кг | Вознаграждение: ${traveler.reward} ₽</small>
     `;
     routesList.appendChild(li);
   });

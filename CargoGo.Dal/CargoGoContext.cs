@@ -24,6 +24,7 @@ public class CargoGoContext : DbContext
             e.Property(p => p.Weight).IsRequired();
             e.Property(p => p.Reward).IsRequired();
             e.Property(p => p.CreatedAt).IsRequired();
+            e.Property(p => p.UserId).IsRequired();
         });
 
         modelBuilder.Entity<SenderEntity>(e =>
@@ -34,6 +35,7 @@ public class CargoGoContext : DbContext
             e.Property(p => p.Weight).IsRequired();
             e.Property(p => p.Description).IsRequired().HasMaxLength(500);
             e.Property(p => p.CreatedAt).IsRequired();
+            e.Property(p => p.UserId).IsRequired();
         });
     }
 }

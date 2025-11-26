@@ -51,8 +51,7 @@
                     });
 
                     if (loginResp.ok) {
-                        const data = await loginResp.json();
-                        const token = data.token; // ✅ Получаем токен
+                        const token = await loginResp.text(); 
 
                         // ✅ Сохраняем токен
                         localStorage.setItem('jwtToken', token);
@@ -62,8 +61,8 @@
                         showError('Пользователь создан, но вход не выполнен');
                     }
                 } else {
-                    const err = await response.json();
-                    showError(err.message || 'Ошибка регистрации');
+                    const err = await response.text();
+                    showError(err || 'Ошибка регистрации');
                 }
             } catch (error) {
                 showError('Ошибка соединения с сервером: ' + error.message);

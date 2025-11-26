@@ -23,10 +23,5 @@
     <ProjectReference Include="..\CargoGo.Dal\CargoGo.Dal.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Requests\" />
-    <Folder Include="Responces\" />
-  </ItemGroup>
-
 </Project>
 

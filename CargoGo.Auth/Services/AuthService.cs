@@ -1,7 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using CargoGo.Auth.Models;
+using CargoGo.Auth.ModelsDb;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 
@@ -27,20 +27,22 @@ namespace CargoGo.Auth.Services
             _jwtExpires = int.Parse(configuration["Jwt:ExpiryInMinutes"] ?? "60");
         }
 
-        public async Task<bool> RegisterAsync(string login, string email, string password)
+        public async Task<(bool success,  string? errorMessage)> RegisterAsync(string login, string email, string password)
         {
+            string? errorMessage = null;
             var user = new AppUser { UserName = login, NormalizedEmail = login, Email = email };
             var result = await _userManager.CreateAsync(user, password);
             if (result.Succeeded)
             {
                 _logger.LogInformation("Пользователь {Email} успешно зарегистрирован.", email);
-                return true;
+                return (true, errorMessage);
             }
             foreach (var error in result.Errors)
             {
-                _logger.LogError("Ошибка регистрации: {Code} - {Description}", error.Code, error.Description);
+                errorMessage = $"Ошибка регистрации: {error.Code} - {error.Description}";
+                _logger.LogError(errorMessage);
             }
-            return false;
+            return (false, errorMessage);
         }
 
         public async Task<(bool success,  string? token, string? errorMessage)> LoginAsync(string email, string password)
@@ -99,6 +101,13 @@ namespace CargoGo.Auth.Services
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
+        }
+
+        public async Task<AppUser?> FindByIdAsync(string? userId)
+        {
+            if (userId != null) 
+                return await _userManager.FindByIdAsync(userId);
+            return null;
         }
     }
 }

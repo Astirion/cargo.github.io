@@ -69,6 +69,7 @@
                 <input type="text" name="to" placeholder="Куда (например: Санкт-Петербург)" required>
                 <input type="number" name="weight" placeholder="Максимальный вес груза (кг)" step="0.1" min="0.1" required>
                 <input type="number" name="reward" placeholder="Вознаграждение (₽)" min="0" required>
+                <input type="date" name="travelTime" placeholder="Время поездки" required>
                 <button type="submit">Добавить маршрут</button>
             </form>
         </div>
@@ -93,6 +94,23 @@
     <script>
         let token = localStorage.getItem('jwtToken');
 
+        // Функция проверки, истёк ли токен
+        function isTokenExpired(token) {
+            if (!token) return true;
+            try {
+                const payload = token.split('.')[1];
+                const decodedPayload = atob(payload);
+                const claims = JSON.parse(decodedPayload);
+                const exp = claims.exp; // Время истечения (в секундах)
+                if (!exp) return false; // Если нет exp — считаем, что не истёк
+                const currentTime = Math.floor(Date.now() / 1000);
+                return exp < currentTime;
+            } catch (e) {
+                console.error('Ошибка декодирования токена:', e);
+                return true; // Если ошибка — считаем, что токен недействителен
+            }
+        }
+
         // Функция получения имени пользователя из токена
         function getUserNameFromToken(token) {
             if (!token) return null;
@@ -108,29 +126,36 @@
             }
         }
 
-        // Функция обновления UI
+        // Функция выхода
+        function logout() {
+            localStorage.removeItem('jwtToken');
+            token = null;
+            updateAuthButton();
+        }
+
+ // Функция обновления UI
         function updateAuthButton() {
-            const label = document.getElementById('authUserLabel');
             const btnText = document.getElementById('authBtnText');
-            if (token) {
+            if (token && !isTokenExpired(token)) {
                 const userName = getUserNameFromToken(token);
                 btnText.textContent = userName;
             } else {
-                btnText.textContent = 'Войти'; // ✅ Кнопка показывает "Войти"
+                btnText.textContent = 'Войти';
             }
         }
 
         // Проверяем токен при загрузке
-        updateAuthButton();
+        if (token && isTokenExpired(token)) {
+            logout(); // Если токен истёк — сразу выходим
+        } else {
+            updateAuthButton();
+        }
 
         // Обработчик кнопки "Войти/Выйти"
         document.getElementById('authBtn').onclick = function() {
-            if (token) {
+            if (token && !isTokenExpired(token)) {
                 // Выход: удаляем токен
-                localStorage.removeItem('jwtToken');
-                token = null;
-                updateAuthButton();
-                window.location.href = 'index.html'; // Перезагрузка
+                window.location.href = 'profile.html'; 
             } else {
                 window.location.href = 'auth.html';
             }

@@ -1,5 +1,7 @@
 using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 using CargoGo.Auth.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
@@ -28,10 +30,10 @@ public class AuthController : ControllerBase
         
         var result = await _authService.RegisterAsync( req.Login,  req.Email, req.Password);
 
-        if (result)
+        if (result.success)
             return Ok();
 
-        return BadRequest("Ошибка регистрации");
+        return BadRequest(result.errorMessage);
     }
     
     [HttpPost("login")]
@@ -41,5 +43,22 @@ public class AuthController : ControllerBase
         if (success)
             return Ok(token);
         return Unauthorized(errorMessage);
+    }
+    
+    [HttpGet("profile")]
+    [Authorize]
+    public async Task<IActionResult> GetProfile()
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var user = await _authService.FindByIdAsync(userId);
+        if (user == null) return NotFound();
+
+        return Ok(new
+        {
+            name = user.NormalizedUserName ?? user.UserName,
+            email = user.Email,
+            phoneNumber = user.PhoneNumber ?? "Не указан",
+            telegram = user.Telegram ?? "Не указан" 
+        });
     }
 }

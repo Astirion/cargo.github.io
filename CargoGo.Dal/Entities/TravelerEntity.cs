@@ -7,6 +7,9 @@ public class TravelerEntity
 {
     [Key]
     public int Id { get; set; }
+    
+    [Required]
+    public DateTime TravelTime { get; set; }
 
     [Required]
     [MaxLength(100)]
@@ -23,4 +26,7 @@ public class TravelerEntity
     public int Reward { get; set; }
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    
+    [Required]
+    public string UserId { get; set; } = string.Empty; 
 }

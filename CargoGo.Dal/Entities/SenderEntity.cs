@@ -24,4 +24,7 @@ public class SenderEntity
     public string Description { get; set; } = string.Empty;
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    
+    [Required]
+    public string UserId { get; set; } = string.Empty; 
 }
