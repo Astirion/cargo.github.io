@@ -86,42 +86,30 @@ builder.Services.AddCargoGoIdentity(builder.Configuration);
 
 var app = builder.Build();
 
-/*
-// Ensure database is created (temporary dev setup)
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<CargoGoContext>();
-    db.Database.EnsureCreated();
-}
-*/
+// Настройка статики — ДО всего остального
+app.UseDefaultFiles();
+app.UseStaticFiles();
 
-// Configure the HTTP request pipeline
-//if (app.Environment.IsDevelopment())
+// CORS, Auth, AuthZ
+app.UseCors();
+app.UseAuthentication();
+app.UseAuthorization();
+
+// API
+app.MapControllers();
+
+// Swagger (только для разработки, но оставим временно)
+if (!app.Environment.IsProduction())
 {
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "CargoGo API v1");
-        c.RoutePrefix = string.Empty; // Set Swagger UI at the app's root
-        c.DocumentTitle = "CargoGo API Documentation";
-        c.DefaultModelsExpandDepth(2); // Show models section
-        c.DefaultModelRendering(Swashbuckle.AspNetCore.SwaggerUI.ModelRendering.Model);
-        c.DisplayRequestDuration();
-        c.EnableDeepLinking();
-        c.EnableFilter();
-        c.ShowExtensions();
-        c.EnableValidator();
+        c.RoutePrefix = string.Empty;
     });
 }
 
-app.UseHttpsRedirection();
-
-
-app.MapControllers();
-
-app.UseCors();
-
-app.UseAuthentication();
-app.UseAuthorization();
+// SPA fallback — в самом конце
+app.MapFallbackToFile("/index.html");
 
 app.Run();
