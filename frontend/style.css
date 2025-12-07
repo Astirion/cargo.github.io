@@ -327,5 +327,90 @@ footer {
   }
 }
 
+.expandable-header {
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    color: #50C878;
+    font-size: 20px;
+}
 
+.expandable-header:hover {
+    opacity: 0.8;
+}
 
+.expand-arrow {
+    font-size: 16px;
+    transition: transform 0.2s ease;
+}
+
+.info-list {
+    display: grid;
+    grid-template-columns: 1fr; /* 1 колонка */
+    gap: 4px 0; /* меньше отступ между строками */
+    margin-top: 12px;
+}
+
+.info-row {
+    display: grid;
+    grid-template-columns: auto 1fr; /* лейбл и значение в строке */
+    gap: 10px; /* меньше отступ между лейблом и значением */
+    align-items: center;
+    margin-bottom: 6px;
+    padding: 5px; /* меньше отступ внутри */
+    background: #f8f9fa;
+    border-radius: 6px;
+    font-size: 15px; /* чуть больше шрифт */
+}
+
+.info-label {
+    font-weight: 600;
+    color: #333;
+    min-width: 100px; /* чуть уже лейбл */
+    padding: 4px 8px; /* меньше отступов */
+    background: #e9ecef; /* светло-серый фон */
+    border-radius: 4px;
+    text-align: left; /* выравнивание по левому краю */
+    align-self: start;
+}
+
+.info-value {
+    color: #333;
+    word-break: break-word;
+    padding: 4px 0;
+}
+
+.edit-input {
+    width: 100%;
+    padding: 4px 8px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    font-size: 15px;
+    grid-column: 2; /* чтобы поле ввода было в той же строке, что и лейбл */
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 600px) {
+    .info-row {
+        grid-template-columns: 1fr; /* на мобильных устройствах — одна колонка */
+        gap: 4px 0;
+    }
+
+    .info-label {
+        font-weight: 600;
+        margin-bottom: 2px;
+        padding: 5px 8px;
+        text-align: left; /* выравнивание по левому краю */
+        font-size: 15px;
+    }
+
+    .info-value {
+        font-size: 15px;
+    }
+
+    .edit-input {
+        grid-column: auto; /* на мобильных — поле ввода под лейблом */
+    }
+}

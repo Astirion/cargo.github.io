@@ -60,5 +60,28 @@ namespace CargoGo.Api.Controllers
 
             return Ok(traveler);
         }
+        
+        [HttpGet("{id:int}")]
+        [Authorize]
+        public async Task<ActionResult<Traveler>> GetTraveler(int id)
+        {
+            var traveler = await db.Travelers.FindAsync(id);
+            if (traveler == null) return NotFound();
+
+
+            var result = new Traveler
+            {
+                Id = traveler.Id,
+                From = traveler.From,
+                To = traveler.To,
+                Weight = traveler.Weight,
+                Reward = traveler.Reward,
+                TravelTime = traveler.TravelTime,
+                CreatedAt = traveler.CreatedAt,
+                UserId = traveler.UserId
+            };
+
+            return Ok(result);
+        }
     }
 }

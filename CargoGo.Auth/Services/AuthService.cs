@@ -27,6 +27,37 @@ namespace CargoGo.Auth.Services
             _jwtExpires = int.Parse(configuration["Jwt:ExpiryInMinutes"] ?? "60");
         }
 
+        public async Task<(bool success, string? errorMessage)> UpdateProfileAsync(string? userId, string name,
+            string? phoneNumber, string? telegram)
+        {
+            if (userId == null)
+                return (false, null);
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                _logger.LogWarning("Пользователь с ID {UserId} не найден.", userId);
+                return (false, "Пользователь не найден.");
+            }
+
+            user.UserName = name;
+            user.PhoneNumber = phoneNumber;
+            user.Telegram = telegram;
+
+            var result = await _userManager.UpdateAsync(user);
+            if (result.Succeeded)
+            {
+                _logger.LogInformation("Профиль пользователя {UserId} обновлён.", userId);
+                return (true, null);
+            }
+
+            foreach (var error in result.Errors)
+            {
+                _logger.LogError("Ошибка обновления профиля: {Code} - {Description}", error.Code, error.Description);
+            }
+
+            return (false, "Ошибка обновления данных.");
+        }
+
         public async Task<(bool success,  string? errorMessage)> RegisterAsync(string login, string email, string password)
         {
             string? errorMessage = null;
@@ -44,7 +75,7 @@ namespace CargoGo.Auth.Services
             }
             return (false, errorMessage);
         }
-
+        
         public async Task<(bool success,  string? token, string? errorMessage)> LoginAsync(string email, string password)
         {
             var user = await _userManager.FindByEmailAsync(email);
@@ -84,6 +115,13 @@ namespace CargoGo.Auth.Services
             }
         }
         
+        public async Task<AppUser?> FindByIdAsync(string? userId)
+        {
+            if (userId != null)
+                return await _userManager.FindByIdAsync(userId);
+            return null;
+        }
+        
         private string GenerateJwtToken(AppUser user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -101,13 +139,6 @@ namespace CargoGo.Auth.Services
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
-        }
-
-        public async Task<AppUser?> FindByIdAsync(string? userId)
-        {
-            if (userId != null) 
-                return await _userManager.FindByIdAsync(userId);
-            return null;
         }
     }
 }

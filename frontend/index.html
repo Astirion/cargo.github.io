@@ -62,21 +62,28 @@
             </div>
         </div>
 
+        <!-- ✅ Карточка с заголовком и формой -->
         <div class="card">
-            <h2>✈️ Добавить маршрут путешественника</h2>
-            <form id="travelerForm">
+            <h2 class="expandable-header" id="travelerHeader">
+                ✈️ Добавить маршрут путешественника
+                <span class="expand-arrow">▼</span>
+            </h2>
+            <form id="travelerForm" style="display: none;">
                 <input type="text" name="from" placeholder="Откуда (например: Москва)" required>
                 <input type="text" name="to" placeholder="Куда (например: Санкт-Петербург)" required>
                 <input type="number" name="weight" placeholder="Максимальный вес груза (кг)" step="0.1" min="0.1" required>
                 <input type="number" name="reward" placeholder="Вознаграждение (₽)" min="0" required>
-                <input type="date" name="travelTime" placeholder="Время поездки" required>
+                <input type="date" name="travelTime" placeholder="Дата поездки" required>
                 <button type="submit">Добавить маршрут</button>
             </form>
         </div>
 
         <div class="card">
-            <h2>📦 Добавить запрос на доставку</h2>
-            <form id="senderForm">
+            <h2 class="expandable-header" id="senderHeader">
+                📦 Добавить запрос на доставку
+                <span class="expand-arrow">▼</span>
+            </h2>
+            <form id="senderForm" style="display: none;">
                 <input type="text" name="from" placeholder="Откуда (например: Москва)" required>
                 <input type="text" name="to" placeholder="Куда (например: Санкт-Петербург)" required>
                 <input type="number" name="weight" placeholder="Вес груза (кг)" step="0.1" min="0.1" required>
@@ -133,7 +140,7 @@
             updateAuthButton();
         }
 
- // Функция обновления UI
+        // Функция обновления UI
         function updateAuthButton() {
             const btnText = document.getElementById('authBtnText');
             if (token && !isTokenExpired(token)) {
@@ -160,7 +167,23 @@
                 window.location.href = 'auth.html';
             }
         };
-         
+
+        // ✅ Логика сворачивания/разворачивания форм
+        function toggleForm(headerId, formId, arrowClass) {
+            const header = document.getElementById(headerId);
+            const form = document.getElementById(formId);
+            const arrow = header.querySelector(arrowClass);
+
+            header.addEventListener('click', () => {
+                const isVisible = form.style.display !== 'none';
+                form.style.display = isVisible ? 'none' : 'block';
+                arrow.textContent = isVisible ? '▼' : '▲';
+            });
+        }
+
+        // Инициализация
+        toggleForm('travelerHeader', 'travelerForm', '.expand-arrow');
+        toggleForm('senderHeader', 'senderForm', '.expand-arrow');
     </script>
 </body>
 </html>

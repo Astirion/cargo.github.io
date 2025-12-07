@@ -30,23 +30,31 @@
 
         <div class="card">
             <h2>📋 Информация о пользователе</h2>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px;">
-                <div>
-                    <label style="display: block; font-weight: 600; margin-bottom: 4px;">Имя</label>
-                    <div id="profileName" style="padding: 8px; background: #f8f9fa; border-radius: 6px;">Загрузка...</div>
+            <div class="info-list" id="profileInfoList">
+                <div class="info-row">
+                    <span class="info-label">Email:</span>
+                    <span id="profileEmail" class="info-value">Загрузка...</span>
                 </div>
-                <div>
-                    <label style="display: block; font-weight: 600; margin-bottom: 4px;">Email</label>
-                    <div id="profileEmail" style="padding: 8px; background: #f8f9fa; border-radius: 6px;">Загрузка...</div>
+                <div class="info-row">
+                    <span class="info-label">Имя:</span>
+                    <span id="profileName" class="info-value">Загрузка...</span>
+                    <input type="text" id="editName" class="edit-input" style="display: none;" />
                 </div>
-                <div>
-                    <label style="display: block; font-weight: 600; margin-bottom: 4px;">Телефон</label>
-                    <div id="profilePhone" style="padding: 8px; background: #f8f9fa; border-radius: 6px;">Не указан</div>
+                <div class="info-row">
+                    <span class="info-label">Телефон:</span>
+                    <span id="profilePhone" class="info-value">Не указан</span>
+                    <input type="tel" id="editPhone" class="edit-input" style="display: none;" />
                 </div>
-                <div>
-                    <label style="display: block; font-weight: 600; margin-bottom: 4px;">Telegram</label>
-                    <div id="profileTelegram" style="padding: 8px; background: #f8f9fa; border-radius: 6px;">Не указан</div>
+                <div class="info-row">
+                    <span class="info-label">Telegram:</span>
+                    <span id="profileTelegram" class="info-value">Не указан</span>
+                    <input type="text" id="editTelegram" class="edit-input" style="display: none;" />
                 </div>
+            </div>
+            <div style="display: flex; gap: 16px; margin-top: 16px;">
+                <button id="editBtn" class="secondary-btn" style="background: #4A90E2;">Редактировать</button>
+                <button id="saveBtn" class="secondary-btn" style="background: #50C878; display: none;">Сохранить</button>
+                <button id="cancelBtn" class="secondary-btn" style="background: #ccc; display: none;">Отмена</button>
             </div>
         </div>
 
@@ -162,6 +170,99 @@
             }
         }
 
+        // Переключение между режимами: просмотр / редактирование
+        function toggleEdit() {
+            const editBtn = document.getElementById('editBtn');
+            const saveBtn = document.getElementById('saveBtn');
+            const cancelBtn = document.getElementById('cancelBtn');
+
+            const isEditing = editBtn.style.display === 'none';
+
+            if (isEditing) {
+                // Возвращаемся в режим просмотра
+                editBtn.style.display = '';
+                saveBtn.style.display = 'none';
+                cancelBtn.style.display = 'none';
+
+                // Скрываем поля ввода, показываем значения
+                document.getElementById('profileName').style.display = '';
+                document.getElementById('editName').style.display = 'none';
+
+                document.getElementById('profilePhone').style.display = '';
+                document.getElementById('editPhone').style.display = 'none';
+
+                document.getElementById('profileTelegram').style.display = '';
+                document.getElementById('editTelegram').style.display = 'none';
+            } else {
+                // Переходим в режим редактирования
+                editBtn.style.display = 'none';
+                saveBtn.style.display = '';
+                cancelBtn.style.display = '';
+
+                // Показываем поля ввода, скрываем значения
+                const name = document.getElementById('profileName').textContent;
+                document.getElementById('editName').value = name;
+                document.getElementById('profileName').style.display = 'none';
+                document.getElementById('editName').style.display = '';
+
+                const phone = document.getElementById('profilePhone').textContent;
+                document.getElementById('editPhone').value = phone === 'Не указан' ? '' : phone;
+                document.getElementById('profilePhone').style.display = 'none';
+                document.getElementById('editPhone').style.display = '';
+
+                const telegram = document.getElementById('profileTelegram').textContent;
+                document.getElementById('editTelegram').value = telegram === 'Не указан' ? '' : telegram;
+                document.getElementById('profileTelegram').style.display = 'none';
+                document.getElementById('editTelegram').style.display = '';
+            }
+        }
+
+        // Обновление профиля (без email)
+        async function updateProfile() {
+            const name = document.getElementById('editName').value.trim();
+            const phone = document.getElementById('editPhone').value.trim();
+            const telegram = document.getElementById('editTelegram').value.trim();
+
+            if (!name) {
+                alert('Имя не может быть пустым');
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:5000/api/auth/update-profile', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        name: name,
+                        phoneNumber: phone,
+                        telegram: telegram
+                    })
+                });
+
+                if (response.ok) {
+                    alert('Данные успешно обновлены');
+                    loadProfile(); // Обновляем отображение
+                    toggleEdit(); // Возвращаемся в режим просмотра
+                } else if (response.status === 401) {
+                    logout();
+                } else {
+                    const error = await response.json();
+                    alert(error.message || 'Ошибка при обновлении данных');
+                }
+            } catch (e) {
+                console.error('Ошибка соединения:', e);
+                alert('Ошибка соединения с сервером');
+            }
+        }
+
+        // Отмена редактирования
+        function cancelEdit() {
+            toggleEdit(); // Просто переключаемся обратно
+        }
+
         // Проверяем токен при загрузке
         if (token && isTokenExpired(token)) {
             logout(); // Если токен истёк — сразу выходим
@@ -169,6 +270,11 @@
             updateAuthButton();
             loadProfile(); // Загружаем профиль
         }
+
+        // Обработчики кнопок
+        document.getElementById('editBtn').onclick = toggleEdit;
+        document.getElementById('saveBtn').onclick = updateProfile;
+        document.getElementById('cancelBtn').onclick = cancelEdit;
 
         // Обработчик кнопки "Войти/Выйти"
         document.getElementById('authBtn').onclick = function() {

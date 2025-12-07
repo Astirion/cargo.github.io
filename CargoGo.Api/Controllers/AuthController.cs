@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
+using CargoGo.Api.Requests;
 using CargoGo.Auth.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -18,6 +19,22 @@ public class AuthController : ControllerBase
     public AuthController(AuthService authService)
     {
         _authService = authService;
+    }
+    
+    [HttpGet("{id}")]
+    [Authorize]
+    public async Task<IActionResult> GetUser(string id)
+    {
+        var user = await _authService.FindByIdAsync(id);
+        if (user == null) return NotFound();
+
+        return Ok(new 
+        {
+            name = user.UserName,
+            email = user.Email,
+            phoneNumber = user.PhoneNumber ?? "Не указан",
+            telegram = user.Telegram ?? "Не указан" 
+        });
     }
     
     [HttpPost("register")]
@@ -55,10 +72,22 @@ public class AuthController : ControllerBase
 
         return Ok(new
         {
-            name = user.NormalizedUserName ?? user.UserName,
+            name = user.UserName,
             email = user.Email,
             phoneNumber = user.PhoneNumber ?? "Не указан",
             telegram = user.Telegram ?? "Не указан" 
         });
+    }
+    
+    [HttpPut("update-profile")]
+    [Authorize]
+    public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfileRequest req)
+    {
+        var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+        var (success, errorMessage) = await _authService.UpdateProfileAsync(userId, req.Name, req.PhoneNumber, req.Telegram);
+
+        if (success)
+            return Ok();
+        return BadRequest(new { message = errorMessage });
     }
 }

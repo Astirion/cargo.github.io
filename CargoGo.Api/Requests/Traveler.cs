@@ -3,12 +3,12 @@ using System.ComponentModel.DataAnnotations;
 namespace CargoGo.Api.Requests;
 
 /// <summary>
-/// Модель путешественника
+/// Модель путешествия 
 /// </summary>
 public class Traveler
 {
     /// <summary>
-    /// Уникальный идентификатор путешественника
+    /// Уникальный идентификатор путешествия
     /// </summary>
     public int Id { get; set; }
     
@@ -57,7 +57,7 @@ public class Traveler
     /// <summary>
     /// Уникальный идентификатор путешественника
     /// </summary>
-    public int UserId { get; set; }
+    public string UserId { get; set; }
 
     public override string ToString()
     {

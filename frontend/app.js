@@ -249,6 +249,10 @@ function updateRoutesList() {
       <strong>${traveler.from} → ${traveler.to}</strong><br>
       <small>Время: ${new Date(traveler.travelTime).toLocaleString()} | Макс. вес: ${traveler.weight} кг | Вознаграждение: ${traveler.reward} ₽</small>
     `;
+    li.onclick = () => {
+      window.location.href = `trip-details.html?id=${traveler.id}`;
+    };
+    li.style.cursor = 'pointer';
     routesList.appendChild(li);
   });
 }
@@ -270,6 +274,9 @@ function updateOrdersList() {
       <strong>${sender.from} → ${sender.to}</strong><br>
       <small>Вес: ${sender.weight} кг | ${sender.description}</small>
     `;
+    // Здесь можно добавить переход на страницу заказа, если она будет
+    // li.onclick = () => { window.location.href = `order-details.html?id=${sender.id}`; };
+    // li.style.cursor = 'pointer';
     ordersList.appendChild(li);
   });
 }
