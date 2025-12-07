@@ -83,6 +83,7 @@ builder.Services.AddDbContext<CargoGoContext>(options =>
     options.UseSqlite(appConnectionString));
 
 builder.Services.AddCargoGoIdentity(builder.Configuration);
+builder.Services.AddHttpClient<GeoapifyService>();
 
 var app = builder.Build();
 
