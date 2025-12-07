@@ -236,21 +236,33 @@ footer {
 }
 
 /* Auth styles */
-
-.auth-dropdown {
-  position: relative;
-}
-
 .auth-topbar {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 8px; /* Отступ между надписью и кнопкой */
-    justify-content: flex-end;
+    margin-bottom: 20px;
+}
+
+.logo-link {
+    text-decoration: none;
+    color: #4A90E2;
+    font-size: 24px;
+    font-weight: bold;
+    display: inline-flex;
+    align-items: center;
+}
+
+.logo-link h1 {
+    margin: 0;
+    font-size: inherit;
+    color: inherit;
+    display: inline-flex;
+    align-items: center;
 }
 
 .auth-btn {
     display: inline-flex;
-    align-items: center;
+    align-items: right;
     padding: 8px 16px;
     border-radius: 20px; /* Эллипсоидный прямоугольник */
     background-color: #4A90E2;
@@ -259,19 +271,18 @@ footer {
     cursor: pointer;
     font-size: 14px;
     text-decoration: none;
-    width: auto; 
+    width: auto;
 }
 
 .auth-btn:hover {
     background-color: #357ABD;
 }
 
-.auth-btn .auth-arrow {
+.auth-arrow {
   font-size: 10px;
   margin-left: 2px;
   color: #fff;
 }
-
 
 #authBtnText {
   margin-left: 0;
@@ -316,17 +327,7 @@ footer {
   background: #f0f7ff;
 }
 
-/* Responsive design */
-@media (max-width: 600px) {
-  .dropdown-section {
-    flex-direction: column;
-  }
-  
-  .dropdown {
-    min-width: 100%;
-  }
-}
-
+/* Expandable headers */
 .expandable-header {
     cursor: pointer;
     display: flex;
@@ -346,6 +347,7 @@ footer {
     transition: transform 0.2s ease;
 }
 
+/* Info list (profile, trip details) */
 .info-list {
     display: grid;
     grid-template-columns: 1fr; /* 1 колонка */
@@ -391,8 +393,16 @@ footer {
     grid-column: 2; /* чтобы поле ввода было в той же строке, что и лейбл */
 }
 
-/* Адаптивность для мобильных устройств */
+/* Responsive design */
 @media (max-width: 600px) {
+    .dropdown-section {
+        flex-direction: column;
+    }
+    
+    .dropdown {
+        min-width: 100%;
+    }
+
     .info-row {
         grid-template-columns: 1fr; /* на мобильных устройствах — одна колонка */
         gap: 4px 0;
