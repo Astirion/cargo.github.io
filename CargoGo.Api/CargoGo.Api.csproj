@@ -21,6 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="..\CargoGo.Auth\CargoGo.Auth.csproj" />
     <ProjectReference Include="..\CargoGo.Dal\CargoGo.Dal.csproj" />
+    <ProjectReference Include="..\CargoGo.Services\CargoGo.Services.csproj" />
   </ItemGroup>
 
 </Project>

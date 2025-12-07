@@ -1955,6 +1955,16 @@
         "runtime": {
           "bin/placeholder/CargoGo.Dal.dll": {}
         }
+      },
+      "CargoGo.Services/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v9.0",
+        "compile": {
+          "bin/placeholder/CargoGo.Services.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/CargoGo.Services.dll": {}
+        }
       }
     }
   },
@@ -5395,12 +5405,18 @@
       "type": "project",
       "path": "../CargoGo.Dal/CargoGo.Dal.csproj",
       "msbuildProject": "../CargoGo.Dal/CargoGo.Dal.csproj"
+    },
+    "CargoGo.Services/1.0.0": {
+      "type": "project",
+      "path": "../CargoGo.Services/CargoGo.Services.csproj",
+      "msbuildProject": "../CargoGo.Services/CargoGo.Services.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net9.0": [
       "CargoGo.Auth >= 1.0.0",
       "CargoGo.Dal >= 1.0.0",
+      "CargoGo.Services >= 1.0.0",
       "Microsoft.EntityFrameworkCore >= 9.0.0",
       "Microsoft.EntityFrameworkCore.Sqlite >= 9.0.0",
       "Microsoft.EntityFrameworkCore.Tools >= 9.0.0",
@@ -5437,6 +5453,9 @@
             },
             "F:\\Cargo\\CargoGo.Dal\\CargoGo.Dal.csproj": {
               "projectPath": "F:\\Cargo\\CargoGo.Dal\\CargoGo.Dal.csproj"
+            },
+            "F:\\Cargo\\CargoGo.Services\\CargoGo.Services.csproj": {
+              "projectPath": "F:\\Cargo\\CargoGo.Services\\CargoGo.Services.csproj"
             }
           }
         }

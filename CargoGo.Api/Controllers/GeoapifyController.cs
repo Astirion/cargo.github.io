@@ -1,4 +1,4 @@
-using CargoGo.Api.Services;
+using CargoGo.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CargoGo.Api.Controllers;
