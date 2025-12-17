@@ -17,7 +17,7 @@ public class GeoapifyService
 
     public async Task<JsonDocument> GeocodeAsync(string address)
     {
-        var url = $"https://api.geoapify.com/v1/geocode/search?text={Uri.EscapeDataString(address)}&apiKey={_apiKey}";
+        var url = $"https://api.geoapify.com/v1/geocode/search?text={Uri.EscapeDataString(address)}&apiKey={_apiKey}"; // ✅ Убран пробел
         var response = await _httpClient.GetAsync(url);
         response.EnsureSuccessStatusCode();
         var json = await response.Content.ReadAsStringAsync();
@@ -26,7 +26,7 @@ public class GeoapifyService
 
     public async Task<JsonDocument> ReverseGeocodeAsync(double lat, double lon)
     {
-        var url = $"https://api.geoapify.com/v1/geocode/reverse?lat={lat}&lon={lon}&apiKey={_apiKey}";
+        var url = $"https://api.geoapify.com/v1/geocode/reverse?lat={lat}&lon={lon}&apiKey={_apiKey}"; // ✅ Убран пробел
         var response = await _httpClient.GetAsync(url);
         response.EnsureSuccessStatusCode();
         var json = await response.Content.ReadAsStringAsync();
@@ -35,7 +35,7 @@ public class GeoapifyService
 
     public async Task<JsonDocument> GetIsolineAsync(double lat, double lon, int timeLimit = 600)
     {
-        var url = $"https://api.geoapify.com/v1/isoline?lat={lat}&lon={lon}&type=drive&mode=shortest&timeLimit={timeLimit}&apiKey={_apiKey}";
+        var url = $"https://api.geoapify.com/v1/isoline?lat={lat}&lon={lon}&type=drive&mode=shortest&timeLimit={timeLimit}&apiKey={_apiKey}"; // ✅ Убран пробел
         var response = await _httpClient.GetAsync(url);
         response.EnsureSuccessStatusCode();
         var json = await response.Content.ReadAsStringAsync();

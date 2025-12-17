@@ -57,7 +57,7 @@ public class Traveler
     /// <summary>
     /// Уникальный идентификатор путешественника
     /// </summary>
-    public string UserId { get; set; }
+    public string? UserId { get; set; }
 
     public override string ToString()
     {

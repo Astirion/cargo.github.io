@@ -51,5 +51,5 @@ public class Sender
     /// <summary>
     /// Уникальный идентификатор отправителя
     /// </summary>
-    public int UserId { get; set; }
+    public int? UserId { get; set; }
 }

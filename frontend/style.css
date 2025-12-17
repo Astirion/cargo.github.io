@@ -424,3 +424,47 @@ footer {
         grid-column: auto; /* на мобильных — поле ввода под лейблом */
     }
 }
+
+.suggestions {
+    position: absolute;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    width: 100%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    display: none;
+    margin-top: 4px;
+    animation: fadeIn 0.2s ease-in-out;
+}
+
+.suggestions.show {
+    display: block;
+}
+
+.suggestions li {
+    padding: 10px 12px;
+    cursor: pointer;
+    list-style: none;
+    border-bottom: 1px solid #eee;
+    transition: background 0.2s;
+    font-size: 15px;
+}
+
+.suggestions li:last-child {
+    border-bottom: none;
+    border-radius: 0 0 8px 8px;
+}
+
+.suggestions li:hover,
+.suggestions li.selected {
+    background: #e0f0ff;
+    color: #000;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}

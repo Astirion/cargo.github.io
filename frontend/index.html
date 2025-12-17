@@ -73,11 +73,19 @@
                 <span class="expand-arrow">▼</span>
             </h2>
             <form id="travelerForm" style="display: none;">
-                <input type="text" name="from" placeholder="Откуда (например: Москва)" required>
-                <input type="text" name="to" placeholder="Куда (например: Санкт-Петербург)" required>
-                <input type="number" name="weight" placeholder="Максимальный вес груза (кг)" step="0.1" min="0.1" required>
-                <input type="number" name="reward" placeholder="Вознаграждение (₽)" min="0" required>
-                <input type="date" name="travelTime" placeholder="Дата поездки" required>
+                <div style="position: relative; margin-bottom: 16px;">
+                    <input type="text" name="from" id="fromInput" placeholder="Откуда (например: Москва)" required autocomplete="off">
+                    <div id="fromSuggestions" class="suggestions"></div>
+                </div>
+
+                <div style="position: relative; margin-bottom: 16px;">
+                    <input type="text" name="to" id="toInput" placeholder="Куда (например: Санкт-Петербург)" required autocomplete="off">
+                    <div id="toSuggestions" class="suggestions"></div>
+                </div>
+
+                <input type="number" name="weight" placeholder="Максимальный вес груза (кг)" step="0.1" min="0.1" required autocomplete="off">
+                <input type="number" name="reward" placeholder="Вознаграждение (₽)" min="0" required autocomplete="off">
+                <input type="date" name="travelTime" placeholder="Дата поездки" required autocomplete="off">
                 <button type="submit">Добавить маршрут</button>
             </form>
         </div>
@@ -88,10 +96,18 @@
                 <span class="expand-arrow">▼</span>
             </h2>
             <form id="senderForm" style="display: none;">
-                <input type="text" name="from" placeholder="Откуда (например: Москва)" required>
-                <input type="text" name="to" placeholder="Куда (например: Санкт-Петербург)" required>
-                <input type="number" name="weight" placeholder="Вес груза (кг)" step="0.1" min="0.1" required>
-                <textarea name="description" placeholder="Описание груза (необязательно)"></textarea>
+                <div style="position: relative; margin-bottom: 16px;">
+                    <input type="text" name="from" id="senderFromInput" placeholder="Откуда (например: Москва)" required autocomplete="off">
+                    <div id="senderFromSuggestions" class="suggestions"></div>
+                </div>
+
+                <div style="position: relative; margin-bottom: 16px;">
+                    <input type="text" name="to" id="senderToInput" placeholder="Куда (например: Санкт-Петербург)" required autocomplete="off">
+                    <div id="senderToSuggestions" class="suggestions"></div>
+                </div>
+
+                <input type="number" name="weight" placeholder="Вес груза (кг)" step="0.1" min="0.1" required autocomplete="off">
+                <textarea name="description" placeholder="Описание груза (необязательно)" autocomplete="off"></textarea>
                 <button type="submit">Добавить запрос</button>
             </form>
         </div>
@@ -171,6 +187,115 @@
                 window.location.href = 'auth.html';
             }
         };
+
+        // ✅ Функция получения подсказок через API
+        async function getSuggestionsGeoapify(query) {
+            if (!query) return [];
+            const url = `http://localhost:5000/api/geoapify/geocode?address=${encodeURIComponent(query)}`;
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error('Ошибка получения подсказок');
+                const data = await response.json();
+                return data.features.slice(0, 10).map(f => f.properties.formatted);
+            } catch (e) {
+                console.error('Ошибка:', e);
+                return [];
+            }
+        }
+
+        function createAutocomplete(inputId, suggestionsId) {
+            const input = document.getElementById(inputId);
+            const suggestionsDiv = document.getElementById(suggestionsId);
+            let suggestions = [];
+            let selectedIndex = -1;
+
+            input.addEventListener('input', async () => {
+                const query = input.value.trim();
+                if (query.length < 2) {
+                    suggestionsDiv.classList.remove('show');
+                    suggestions = [];
+                    selectedIndex = -1;
+                    return;
+                }
+
+                suggestions = await getSuggestionsGeoapify(query);
+
+                if (suggestions.length > 0) {
+                    suggestionsDiv.innerHTML = suggestions.map((city, index) => 
+                        `<li class="suggestion-item" data-index="${index}">${city}</li>`
+                    ).join('');
+                    selectedIndex = -1;
+                    suggestionsDiv.classList.add('show');
+                } else {
+                    suggestionsDiv.classList.remove('show');
+                    selectedIndex = -1;
+                }
+            });
+
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    if (suggestions.length === 0) return;
+
+                    selectedIndex = (selectedIndex + 1) % suggestions.length;
+                    updateSelection();
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    if (suggestions.length === 0) return;
+
+                    selectedIndex = (selectedIndex - 1 + suggestions.length) % suggestions.length;
+                    updateSelection();
+                } else if (e.key === 'Enter') {
+                    e.preventDefault();
+                    if (selectedIndex >= 0 && selectedIndex < suggestions.length) {
+                        selectCity(suggestions[selectedIndex], inputId, suggestionsId);
+                    }
+                } else if (e.key === 'Escape') {
+                    suggestionsDiv.classList.remove('show');
+                    selectedIndex = -1;
+                }
+            });
+
+            input.addEventListener('blur', () => {
+                setTimeout(() => {
+                    suggestionsDiv.classList.remove('show');
+                    selectedIndex = -1;
+                }, 200);
+            });
+
+            suggestionsDiv.addEventListener('click', (e) => {
+                if (e.target.classList.contains('suggestion-item')) {
+                    const index = parseInt(e.target.getAttribute('data-index'));
+                    if (index >= 0 && index < suggestions.length) {
+                        selectCity(suggestions[index], inputId, suggestionsId);
+                    }
+                }
+            });
+
+            function updateSelection() {
+                const items = suggestionsDiv.querySelectorAll('.suggestion-item');
+                items.forEach((item, index) => {
+                    if (index === selectedIndex) {
+                        item.classList.add('selected');
+                    } else {
+                        item.classList.remove('selected');
+                    }
+                });
+            }
+        }
+
+        function selectCity(city, inputId, suggestionsId) {
+            document.getElementById(inputId).value = city;
+            document.getElementById(suggestionsId).classList.remove('show');
+            document.getElementById(inputId).focus();
+            selectedIndex = -1;
+        }
+
+        // Инициализация автодополнения
+        createAutocomplete('fromInput', 'fromSuggestions');
+        createAutocomplete('toInput', 'toSuggestions');
+        createAutocomplete('senderFromInput', 'senderFromSuggestions');
+        createAutocomplete('senderToInput', 'senderToSuggestions');
 
         // ✅ Логика сворачивания/разворачивания форм
         function toggleForm(headerId, formId, arrowClass) {

@@ -7,6 +7,7 @@ using CargoGo.Api.Requests;
 using CargoGo.Auth;
 using CargoGo.Dal;
 using CargoGo.Dal.Entities;
+using CargoGo.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
